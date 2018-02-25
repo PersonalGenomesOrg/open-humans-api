@@ -173,3 +173,45 @@ def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
 # Alternate names for the same functions.
 def delete_files(*args, **kwargs):
     return delete_file(*args, **kwargs)
+
+
+def send_message(subject, message, access_token, base_url=OH_BASE_URL):
+    """ 
+    send message to individual member.
+    """
+    url = urlparse.urljoin(
+        base_url, '/api/direct-sharing/project/message/?{}'.format(
+        urlparse.urlencode({'access_token': access_token})))
+    requests.post(url,data={'subject': subject,
+                            'message': message})
+
+
+def send_message(subject, message, access_token, all_members, project_member_ids, base_url=OH_BASE_URL):
+    """
+    send message to multiple members.
+    """
+    url = urlparse.urljoin(
+        base_url, '/api/direct-sharing/project/message/?{}'.format(
+        urlparse.urlencode({'access_token': access_token})))
+    if all_members  and project_member_ids:
+        raise ValueError(
+            "One (and only one) of the following must be specified: "
+            "project_members_id or all_members is set to True.")
+    requests.post(url, data={'all_members': all_members,
+                 'project_member_ids': project_member_ids,
+                 'subject': subject,
+                 'message': message})
+
+
+def messaging(subject, message, access_token, master_access_token, all_members=False, project_member_ids=None, base_url=OH_BASE_URL):
+    """
+    send messages.
+    """
+    if master_access_token and not (access_token):
+        send_message(subject, message, master_access_token, all_members, project_member_ids, OH_BASE_URL)
+    elif access_token and not (master_access_token):
+        send_message(subject, message, access_token, OH_BASE_URL)
+    else:
+        raise ValueError(
+            "One (and only one) of the following must be specified: "
+            "project_member_ids or all_members is set to True.")
