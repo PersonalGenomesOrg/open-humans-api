@@ -175,7 +175,7 @@ def delete_files(*args, **kwargs):
     return delete_file(*args, **kwargs)
 
 
-def send_message(subject, message, access_token, base_url=OH_BASE_URL):
+def send_message_individual(subject, message, access_token, base_url=OH_BASE_URL):
     """ 
     send message to individual member.
     """
@@ -186,7 +186,7 @@ def send_message(subject, message, access_token, base_url=OH_BASE_URL):
                             'message': message})
 
 
-def send_message(subject, message, access_token, all_members, project_member_ids, base_url=OH_BASE_URL):
+def send_message_multiple(subject, message, access_token, all_members, project_member_ids, base_url=OH_BASE_URL):
     """
     send message to multiple members.
     """
@@ -208,9 +208,9 @@ def messaging(subject, message, access_token, master_access_token, all_members=F
     send messages.
     """
     if master_access_token and not (access_token):
-        send_message(subject, message, master_access_token, all_members, project_member_ids, OH_BASE_URL)
+        send_message_multiple(subject, message, master_access_token, all_members, project_member_ids, OH_BASE_URL)
     elif access_token and not (master_access_token):
-        send_message(subject, message, access_token, OH_BASE_URL)
+        send_message_individual(subject, message, access_token, OH_BASE_URL)
     else:
         raise ValueError(
             "One (and only one) of the following must be specified: "
