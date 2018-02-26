@@ -186,13 +186,13 @@ def send_message_individual(subject, message, access_token, base_url=OH_BASE_URL
                             'message': message})
 
 
-def send_message_multiple(subject, message, access_token, all_members, project_member_ids, base_url=OH_BASE_URL):
+def send_message_multiple(subject, message, master_access_token, all_members, project_member_ids, base_url=OH_BASE_URL):
     """
     send message to multiple members.
     """
     url = urlparse.urljoin(
         base_url, '/api/direct-sharing/project/message/?{}'.format(
-        urlparse.urlencode({'access_token': access_token})))
+        urlparse.urlencode({'access_token': master_access_token})))
     if all_members  and project_member_ids:
         raise ValueError(
             "One (and only one) of the following must be specified: "
@@ -203,15 +203,14 @@ def send_message_multiple(subject, message, access_token, all_members, project_m
                  'message': message})
 
 
-def messaging(subject, message, access_token, master_access_token=False, all_members=False, project_member_ids=None, base_url=OH_BASE_URL):
+def messaging(subject, message, token, is_token_master=False, all_members=False, project_member_ids=None, base_url=OH_BASE_URL):
     """
     send messages.
     """
-    if master_access_token:
-        send_message_multiple(subject, message, access_token, all_members, project_member_ids, OH_BASE_URL)
-    elif access_token:
-        send_message_individual(subject, message, access_token, OH_BASE_URL)
+    if is_token_master and token:
+        send_message_multiple(subject, message, token, all_members, project_member_ids, OH_BASE_URL)
+    elif token:
+        send_message_individual(subject, message, token, OH_BASE_URL)
     else:
         raise ValueError(
-            "One (and only one) of the following must be specified: "
-            "project_member_ids or all_members is set to True.")
+            "token must be specified either access token or master access token.")
