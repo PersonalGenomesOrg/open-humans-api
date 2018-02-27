@@ -175,42 +175,22 @@ def delete_files(*args, **kwargs):
     return delete_file(*args, **kwargs)
 
 
-def send_message_individual(subject, message, access_token, base_url=OH_BASE_URL):
-    """ 
-    send message to individual member.
+def message(subject, message, access_token, all_members=False, project_member_ids=None, base_url=OH_BASE_URL):
+    """
+    send messages.
     """
     url = urlparse.urljoin(
         base_url, '/api/direct-sharing/project/message/?{}'.format(
         urlparse.urlencode({'access_token': access_token})))
-    requests.post(url,data={'subject': subject,
-                            'message': message})
-
-
-def send_message_multiple(subject, message, master_access_token, all_members, project_member_ids, base_url=OH_BASE_URL):
-    """
-    send message to multiple members.
-    """
-    url = urlparse.urljoin(
-        base_url, '/api/direct-sharing/project/message/?{}'.format(
-        urlparse.urlencode({'access_token': master_access_token})))
-    if all_members  and project_member_ids:
+    if not(all_members) and not(project_member_ids):
+        requests.post(url,data={'subject': subject,
+                                'message': message})
+    elif all_members and project_member_ids:
         raise ValueError(
             "One (and only one) of the following must be specified: "
             "project_members_id or all_members is set to True.")
-    requests.post(url, data={'all_members': all_members,
-                 'project_member_ids': project_member_ids,
-                 'subject': subject,
-                 'message': message})
-
-
-def messaging(subject, message, token, is_token_master=False, all_members=False, project_member_ids=None, base_url=OH_BASE_URL):
-    """
-    send messages.
-    """
-    if is_token_master and token:
-        send_message_multiple(subject, message, token, all_members, project_member_ids, OH_BASE_URL)
-    elif token:
-        send_message_individual(subject, message, token, OH_BASE_URL)
     else:
-        raise ValueError(
-            "token must be specified either access token or master access token.")
+        requests.post(url, data={'all_members': all_members,
+                     'project_member_ids': project_member_ids,
+                     'subject': subject,
+                     'message': message}) 
