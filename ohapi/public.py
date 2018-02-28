@@ -77,7 +77,6 @@ def download_url(result, directory, max_bytes):
                 f.write(chunk)
 
     logging.info('Downloaded {}'.format(filename))
-    return
 
 
 @click.command()
@@ -87,19 +86,20 @@ def download_url(result, directory, max_bytes):
               default='.')
 @click.option('-m', '--max-size', help='the maximum file size to download',
               default='128m')
-@click.option('-v', '--verbose', help='Report INFO level logging to stdout',
+@click.option('-q', '--quiet', help='Report ERROR level logging to stdout',
               is_flag=True)
 @click.option('--debug', help='Report DEBUG level logging to stdout.',
               is_flag=True)
-def download(source, username, directory, max_size, verbose, debug):
+def download(source, username, directory, max_size, quiet, debug):
     """
     Download public data from Open Humans.
     """
     if debug:
         logging.basicConfig(level=logging.DEBUG)
-    elif verbose:
+    elif quiet:
+        logging.basicConfig(level=logging.ERROR)
+    else:
         logging.basicConfig(level=logging.INFO)
-    logging.basicConfig(level=logging.DEBUG)
 
     logging.debug("Running with source: '{}'".format(source) +
                   " and username: '{}'".format(username) +
