@@ -29,6 +29,7 @@ def signal_handler_cb(signal_name, frame):
     Exit on Ctrl-C.
     """
     os._exit(1)
+    return
 
 
 def download_url(result, directory, max_bytes):
@@ -77,6 +78,7 @@ def download_url(result, directory, max_bytes):
                 f.write(chunk)
 
     logging.info('Downloaded {}'.format(filename))
+    return
 
 
 @click.command()
@@ -98,6 +100,7 @@ def download(source, username, directory, max_size, verbose, debug):
         logging.basicConfig(level=logging.DEBUG)
     elif verbose:
         logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
 
     logging.debug("Running with source: '{}'".format(source) +
                   " and username: '{}'".format(username) +
