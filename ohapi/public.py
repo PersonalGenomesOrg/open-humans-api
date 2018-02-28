@@ -29,7 +29,6 @@ def signal_handler_cb(signal_name, frame):
     Exit on Ctrl-C.
     """
     os._exit(1)
-    return
 
 
 def download_url(result, directory, max_bytes):
