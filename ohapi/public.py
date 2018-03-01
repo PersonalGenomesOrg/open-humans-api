@@ -109,8 +109,6 @@ def download(source, username, directory, max_size, quiet, debug):
         logging.basicConfig(level=logging.ERROR)
     else:
         logging.basicConfig(level=logging.INFO)
-    else:
-        logging.basicConfig(level=logging.INFO)
 
     logging.debug("Running with source: '{}'".format(source) +
                   " and username: '{}'".format(username) +
