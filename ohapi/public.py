@@ -14,6 +14,7 @@ except ImportError:
 import click
 import concurrent.futures
 import requests
+import sys
 
 from humanfriendly import format_size, parse_size
 
@@ -72,9 +73,17 @@ def download_url(result, directory, max_bytes):
         pass
 
     with open(output_path, 'wb') as f:
+        total_length = response.headers.get('content-length')
+        total_length = int(total_length)
+        dl = 0
         for chunk in response.iter_content(chunk_size=8192):
             if chunk:
+                dl += len(chunk)
                 f.write(chunk)
+                done = int(50 * dl / total_length)
+                sys.stdout.write("\r[%s%s]%d%s" % ('.' * done, '' * (50 - done), done * 2, '%'))
+                sys.stdout.flush
+        print("\n")
 
     logging.info('Downloaded {}'.format(filename))
 
@@ -98,6 +107,8 @@ def download(source, username, directory, max_size, quiet, debug):
         logging.basicConfig(level=logging.DEBUG)
     elif quiet:
         logging.basicConfig(level=logging.ERROR)
+    else:
+        logging.basicConfig(level=logging.INFO)
     else:
         logging.basicConfig(level=logging.INFO)
 
