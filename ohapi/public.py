@@ -36,6 +36,11 @@ def download_url(result, directory, max_bytes):
     Download a file.
     """
     response = requests.get(result['download_url'], stream=True)
+    if not response.status_code == 200:
+        err_msg = 'API response status code {}'.format(response.status_code)
+        if 'detail' in response.json():
+            err_msg = err_msg + ": {}".format(response.json()['detail'])
+        raise Exception(err_msg)
 
     # TODO: make this more robust by parsing the URL
     filename = response.url.split('/')[-1]
