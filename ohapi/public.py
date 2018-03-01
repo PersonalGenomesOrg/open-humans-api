@@ -45,7 +45,8 @@ def download_url(result, directory, max_bytes):
     size = int(response.headers['Content-Length'])
 
     if size > max_bytes:
-        logging.info('Skipping {}, {} > {}'.format(filename, format_size(size), format_size(max_bytes)))
+        logging.info('Skipping {}, {} > {}'.format(filename, format_size(size),
+                                                   format_size(max_bytes)))
 
         return
 
