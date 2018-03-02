@@ -17,6 +17,8 @@ import requests
 import sys
 
 from humanfriendly import format_size, parse_size
+from tqdm import tqdm
+import math
 
 from .api import get_page
 
@@ -72,18 +74,19 @@ def download_url(result, directory, max_bytes):
         # TODO: check errno here?
         pass
 
+    total_length = response.headers.get('content-length', 0)
+    total_length = int(total_length)
+    dl = 0
+    chunk_size = 8192
+    total_size = math.ceil(total_length/chunk_size)
     with open(output_path, 'wb') as f:
-        total_length = response.headers.get('content-length')
-        total_length = int(total_length)
-        dl = 0
-        for chunk in response.iter_content(chunk_size=8192):
+        for chunk in tqdm(response.iter_content(chunk_size), total=total_size, unit_scale=True, leave=True):
             if chunk:
                 dl += len(chunk)
                 f.write(chunk)
-                done = int(50 * dl / total_length)
-                sys.stdout.write("\r[%s%s]%d%s" % ('.' * done, '' * (50 - done), done * 2, '%'))
-                sys.stdout.flush
-        print("\n")
+                # done = int(50 * dl / total_length)
+                # sys.stdout.write("\r[%s%s]%d%s" % ('.' * done, '' * (50 - done), done * 2, '%'))
+                # sys.stdout.flush]
 
     logging.info('Downloaded {}'.format(filename))
 
