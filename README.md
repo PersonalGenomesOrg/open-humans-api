@@ -211,3 +211,7 @@ Uploading that data with a master access token:
 ```
 $ ohproj-upload -T MASTER_ACCESS_TOKEN --metadata-csv member_data_metadata.csv -d member_data
 ```
+## Development
+For development purposes use flake8 before commiting any changes.
+To install flake8, use `pip install flake8`
+Before commiting your changes, run `flake8 open-humans-api`
