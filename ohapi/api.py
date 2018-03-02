@@ -132,17 +132,16 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
                          'file size'.format(target_filepath))
             return
 
-    url = urlparse.urljoin(
-        base_url, '/api/direct-sharing/project/files/upload/?{}'.format(
-            urlparse.urlencode({'access_token': access_token})))
+    url = urlparse.urljoin(base_url, '/api/direct-sharing/project/files/upload'
+                                     '/?{}'.format(urlparse.urlencode(
+                                        {'access_token': access_token})))
 
     logging.info('Uploading {} ({})'.format(
         target_filepath, format_size(filesize)))
 
-    r = requests.post(url,
-                      files={'data_file': open(target_filepath, 'rb')},
-                      data={'project_member_id': project_member_id,
-                            'metadata': json.dumps(metadata)})
+    requests.post(url, files={'data_file': open(target_filepath, 'rb')},
+                  data={'project_member_id': project_member_id,
+                        'metadata': json.dumps(metadata)})
 
     logging.info('Upload complete: {}'.format(target_filepath))
 
