@@ -15,10 +15,12 @@ before opening a new one.
 ### Install your development environment
 If you want to contribute code you should install `open-humans-api` in the editable mode.
 
-The easiest workflow to set up your development environment is the following:
+The easiest workflow to set up your development environment is the following.
+
+1. Clone this repository into your own *GitHub* account. Then run the following:
 
 ```
-git clone https://github.com/OpenHumans/open-humans-api.git
+git clone https://github.com/$YOUR_USER_NAME/open-humans-api.git
 cd open-humans-api
 pip install -e .
 ```
@@ -32,6 +34,9 @@ the required development packages. From your repository you can do so by running
 If you have written some code that you would like us to merge into `OpenHumans/open-humans-api`
 [you can start a pull request](https://github.com/OpenHumans/open-humans-api/pulls) (PR).
 Some guidelines for these:
+- You should submit PRs from your own repository, ideally from a new feature-branch.
+To switch to one you can run `git checkout -b your_branch_name`. Do your edits,
+commit them, push them to your fork and then you can make a pull request to us.
 - If you are still working on a pull request please prefix the name
 of the pull request with `WIP` or `[WIP]` to state that it's a *Work In Progress*.
 - Once you think your pull request is ready to be merged edit the title and replace
