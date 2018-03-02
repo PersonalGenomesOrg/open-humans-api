@@ -15,8 +15,7 @@ before_script:
 
 script:
   - py.test
-  - py.test --cov=.
+  - py.test --cov=. --cov-report xml:coverage.xml
 
 after_success:
-  - coverage xml
   - bin/cc-test-reporter after-build -t coverage.py
