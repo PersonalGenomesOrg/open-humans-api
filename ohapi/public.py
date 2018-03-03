@@ -82,8 +82,8 @@ def download_url(result, directory, max_bytes):
             if chunk:
                 dl += len(chunk)
                 f.write(chunk)
-                done = int(50 * dl / total_length)
-                sys.stdout.write("\r[%s%s]%d%s" % ('.' * done, '' * (50 - done), done * 2, '%'))
+                d = int(50 * dl / total_length)
+                sys.stdout.write("\r[%s%s]%d%s"%('.'*d,''*(50-d),d*2,'%'))
                 sys.stdout.flush
         print("\n")
 
