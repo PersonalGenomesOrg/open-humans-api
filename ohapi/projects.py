@@ -58,8 +58,8 @@ class OHProject:
                           max_bytes=parse_size(max_size))
 
     @classmethod
-    def download_member_shared(cls, member_data, target_member_dir, source=None,
-                               max_size=MAX_SIZE_DEFAULT):
+    def download_member_shared(cls, member_data, target_member_dir,
+                               source=None, max_size=MAX_SIZE_DEFAULT):
         """
         Download files to sync a local dir to match OH member shared data.
 

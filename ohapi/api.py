@@ -127,7 +127,8 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
     if remote_file_info:
         response = requests.get(remote_file_info['download_url'], stream=True)
         if not response.status_code == 200:
-            err_msg = 'API response status code {}'.format(response.status_code)
+            err_msg = 'API response status code {}'.\
+                format(response.status_code)
             if 'detail' in response.json():
                 err_msg = err_msg + ": {}".format(response.json()['detail'])
             raise Exception(err_msg)
@@ -189,16 +190,17 @@ def delete_files(*args, **kwargs):
     return delete_file(*args, **kwargs)
 
 
-def message(subject, message, access_token, all_members=False, project_member_ids=None, base_url=OH_BASE_URL):
+def message(subject, message, access_token, all_members=False,
+            project_member_ids=None, base_url=OH_BASE_URL):
     """
     send messages.
     """
     url = urlparse.urljoin(
         base_url, '/api/direct-sharing/project/message/?{}'.format(
-        urlparse.urlencode({'access_token': access_token})))
+            urlparse.urlencode({'access_token': access_token})))
     if not(all_members) and not(project_member_ids):
-        r = requests.post(url,data={'subject': subject,
-                                'message': message})
+        r = requests.post(url, data={'subject': subject,
+                                     'message': message})
         if not r.status_code == 200:
             err_msg = 'API response status code {}'.format(r.status_code)
             if 'detail' in r.json():
@@ -210,9 +212,9 @@ def message(subject, message, access_token, all_members=False, project_member_id
             "project_members_id or all_members is set to True.")
     else:
         r = requests.post(url, data={'all_members': all_members,
-                     'project_member_ids': project_member_ids,
-                     'subject': subject,
-                     'message': message})
+                                     'project_member_ids': project_member_ids,
+                                     'subject': subject,
+                                     'message': message})
         if not r.status_code == 200:
             err_msg = 'API response status code {}'.format(r.status_code)
             if 'detail' in r.json():
