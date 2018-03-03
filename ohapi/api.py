@@ -141,9 +141,16 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
         target_filepath, format_size(filesize)))
 
     r = requests.post(url,
-                      files={'data_file': open(target_filepath, 'rb')},
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
+
+    r2 = requests.put(url=r.json()['url'],
+                      data={'data_file': open(target_filepath, 'rb')})
+    if not r2.status_code == 200:
+        err_msg = 'API response status code {}'.format(r2.status_code)
+        if 'detail' in r2.json():
+            err_msg = err_msg + ": {}".format(r2.json()['detail'])
+        raise Exception(err_msg)
 
     logging.info('Upload complete: {}'.format(target_filepath))
 
