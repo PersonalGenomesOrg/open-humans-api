@@ -65,6 +65,11 @@ def oauth2_token_exchange(client_id, client_secret, redirect_uri,
     req = requests.post(
         token_url, data=data,
         auth=requests.auth.HTTPBasicAuth(client_id, client_secret))
+    if not req.status_code == 201 and not req.status_code == 202 and not req.status_code == 200:
+        err_msg = 'API response status code {}'.format(req.status_code)
+        if 'detail' in req.json():
+            err_msg = err_msg + ": {}".format(req.json()['detail'])
+        raise Exception(err_msg)
     data = req.json()
     return data
 
@@ -127,6 +132,11 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
 
     if remote_file_info:
         response = requests.get(remote_file_info['download_url'], stream=True)
+        if not response.status_code == 200:
+            err_msg = 'API response status code {}'.format(response.status_code)
+            if 'detail' in response.json():
+                err_msg = err_msg + ": {}".format(response.json()['detail'])
+            raise Exception(err_msg)
         remote_size = int(response.headers['Content-Length'])
         if remote_size == filesize:
             logging.info('Skipping {}, remote exists with matching name and '
@@ -147,6 +157,11 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
     requests.post(url, files={'data_file': open(target_filepath, 'rb')},
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
+    if not r.status_code == 200 and not r.status_code == 201 and not r.status_code == 202:
+        err_msg = 'API response status code {}'.format(r.status_code)
+        if 'detail' in r.json():
+            err_msg = err_msg + ": {}".format(r.json()['detail'])
+        raise Exception(err_msg)
 
     logging.info('Upload complete: {}'.format(target_filepath))
 
@@ -170,8 +185,13 @@ def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
         raise ValueError(
             "One (and only one) of the following must be specified: "
             "file_basename, file_id, or all_files is set to True.")
-    r = requests.post(url, data=data)
-    return r
+    response = requests.post(url, data=data)
+    if not response.status_code == 202 and not response.status_code == 204:
+        err_msg = 'API response status code {}'.format(response.status_code)
+        if 'detail' in response.json():
+            err_msg = err_msg + ": {}".format(response.json()['detail'])
+        raise Exception(err_msg)
+    return response
 
 
 # Alternate names for the same functions.
@@ -188,15 +208,25 @@ def message(subject, message, access_token, all_members=False,
         base_url, '/api/direct-sharing/project/message/?{}'.format(
             urlparse.urlencode({'access_token': access_token})))
     if not(all_members) and not(project_member_ids):
-        return requests.post(url, data={'subject': subject,
-                                        'message': message})
+        response = requests.post(url,data={'subject': subject,
+                                'message': message})
+        if not response.status_code == 200 and not response.status_code == 201 and not response.status_code == 202:
+            err_msg = 'API response status code {}'.format(response.status_code)
+            if 'detail' in response.json():
+                err_msg = err_msg + ": {}".format(response.json()['detail'])
+            raise Exception(err_msg)
+        return response
     elif all_members and project_member_ids:
         raise ValueError(
             "One (and only one) of the following must be specified: "
             "project_members_id or all_members is set to True.")
     else:
-        return requests.post(url, data={
-               'all_members': all_members,
-               'project_member_ids': project_member_ids,
-               'subject': subject,
-               'message': message})
+        response = requests.post(url, data={'all_members': all_members,
+                     'project_member_ids': project_member_ids,
+                     'subject': subject,
+                     'message': message})
+        if not response.status_code == 200 and not response.status_code == 201 and not response.status_code == 202:
+            err_msg = 'API response status code {}'.format(response.status_code)
+            if 'detail' in response.json():
+                err_msg = err_msg + ": {}".format(response.json()['detail'])
+            raise Exception(err_msg)
