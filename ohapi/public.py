@@ -17,8 +17,6 @@ import requests
 import sys
 
 from humanfriendly import format_size, parse_size
-from tqdm import tqdm
-import math
 
 from .api import get_page
 
