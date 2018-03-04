@@ -64,6 +64,13 @@ def oauth2_token_exchange(client_id, client_secret, redirect_uri,
         '{}/oauth2/token/'.format(base_url),
         data=data,
         auth=requests.auth.HTTPBasicAuth(client_id, client_secret))
+    if not (req.status_code == 201 or
+                req.status_code == 202 or
+                req.status_code == 200):
+        err_msg = 'API response status code {}'.format(req.status_code)
+        if 'detail' in req.json():
+            err_msg = err_msg + ": {}".format(req.json()['detail'])
+        raise Exception(err_msg)
     data = req.json()
     return data
 
@@ -126,7 +133,7 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
 
     if remote_file_info:
         response = requests.get(remote_file_info['download_url'], stream=True)
-        if not response.status_code == 200:
+        if not (response.status_code == 200):
             err_msg = 'API response status code {}'.\
                 format(response.status_code)
             if 'detail' in response.json():
@@ -149,7 +156,9 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
                       files={'data_file': open(target_filepath, 'rb')},
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
-    if not r.status_code == 200:
+    if not (r.status_code == 200 or
+                r.status_code == 201 or
+                r.status_code == 202):
         err_msg = 'API response status code {}'.format(r.status_code)
         if 'detail' in r.json():
             err_msg = err_msg + ": {}".format(r.json()['detail'])
@@ -178,7 +187,7 @@ def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
             "One (and only one) of the following must be specified: "
             "file_basename, file_id, or all_files is set to True.")
     r = requests.post(url, data=data)
-    if not r.status_code == 200:
+    if not (r.status_code == 202 or r.status_code == 204):
         err_msg = 'API response status code {}'.format(r.status_code)
         if 'detail' in r.json():
             err_msg = err_msg + ": {}".format(r.json()['detail'])
@@ -201,7 +210,9 @@ def message(subject, message, access_token, all_members=False,
     if not(all_members) and not(project_member_ids):
         r = requests.post(url, data={'subject': subject,
                                      'message': message})
-        if not r.status_code == 200:
+        if not (r.status_code == 200 or
+                    r.status_code == 201 or
+                    r.status_code == 202):
             err_msg = 'API response status code {}'.format(r.status_code)
             if 'detail' in r.json():
                 err_msg = err_msg + ": {}".format(r.json()['detail'])
@@ -215,7 +226,9 @@ def message(subject, message, access_token, all_members=False,
                                      'project_member_ids': project_member_ids,
                                      'subject': subject,
                                      'message': message})
-        if not r.status_code == 200:
+        if (r.status_code != 200 or
+                    r.status_code != 201 or
+                    r.status_code != 202):
             err_msg = 'API response status code {}'.format(r.status_code)
             if 'detail' in r.json():
                 err_msg = err_msg + ": {}".format(r.json()['detail'])
