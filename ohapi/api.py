@@ -65,8 +65,8 @@ def oauth2_token_exchange(client_id, client_secret, redirect_uri,
         data=data,
         auth=requests.auth.HTTPBasicAuth(client_id, client_secret))
     if not (req.status_code == 201 or
-                req.status_code == 202 or
-                req.status_code == 200):
+            req.status_code == 202 or
+            req.status_code == 200):
         err_msg = 'API response status code {}'.format(req.status_code)
         if 'detail' in req.json():
             err_msg = err_msg + ": {}".format(req.json()['detail'])
@@ -157,8 +157,8 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
     if not (r.status_code == 200 or
-                r.status_code == 201 or
-                r.status_code == 202):
+            r.status_code == 201 or
+            r.status_code == 202):
         err_msg = 'API response status code {}'.format(r.status_code)
         if 'detail' in r.json():
             err_msg = err_msg + ": {}".format(r.json()['detail'])
@@ -211,8 +211,8 @@ def message(subject, message, access_token, all_members=False,
         r = requests.post(url, data={'subject': subject,
                                      'message': message})
         if not (r.status_code == 200 or
-                    r.status_code == 201 or
-                    r.status_code == 202):
+                r.status_code == 201 or
+                r.status_code == 202):
             err_msg = 'API response status code {}'.format(r.status_code)
             if 'detail' in r.json():
                 err_msg = err_msg + ": {}".format(r.json()['detail'])
@@ -226,9 +226,9 @@ def message(subject, message, access_token, all_members=False,
                                      'project_member_ids': project_member_ids,
                                      'subject': subject,
                                      'message': message})
-        if (r.status_code != 200 or
-                    r.status_code != 201 or
-                    r.status_code != 202):
+        if not (r.status_code != 200 or
+                r.status_code != 201 or
+                r.status_code != 202):
             err_msg = 'API response status code {}'.format(r.status_code)
             if 'detail' in r.json():
                 err_msg = err_msg + ": {}".format(r.json()['detail'])
