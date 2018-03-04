@@ -66,8 +66,8 @@ def oauth2_token_exchange(client_id, client_secret, redirect_uri,
         token_url, data=data,
         auth=requests.auth.HTTPBasicAuth(client_id, client_secret))
     if (req.status_code != 201 and
-        req.status_code != 202 and
-        req.status_code != 200):
+            req.status_code != 202 and
+            req.status_code != 200):
         err_msg = 'API response status code {}'.format(req.status_code)
         if 'detail' in req.json():
             err_msg = err_msg + ": {}".format(req.json()['detail'])
@@ -160,8 +160,8 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
     if (r.status_code != 200 and
-        r.status_code != 201 and
-        r.status_code != 202):
+            r.status_code != 201 and
+            r.status_code != 202):
         err_msg = 'API response status code {}'.format(r.status_code)
         if 'detail' in r.json():
             err_msg = err_msg + ": {}".format(r.json()['detail'])
@@ -213,10 +213,10 @@ def message(subject, message, access_token, all_members=False,
             urlparse.urlencode({'access_token': access_token})))
     if not(all_members) and not(project_member_ids):
         response = requests.post(url, data={'subject': subject,
-                                'message': message})
+                                            'message': message})
         if (response.status_code != 200 and
-            response.status_code != 201 and
-            response.status_code != 202):
+                response.status_code != 201 and
+                response.status_code != 202):
             err = 'API response status code {}'.format(response.status_code)
             if 'detail' in response.json():
                 err = err + ": {}".format(response.json()['detail'])
@@ -228,12 +228,12 @@ def message(subject, message, access_token, all_members=False,
             "project_members_id or all_members is set to True.")
     else:
         response = requests.post(url, data={'all_members': all_members,
-                     'project_member_ids': project_member_ids,
-                     'subject': subject,
-                     'message': message})
+                                            'project_member_ids': project_member_ids,
+                                            'subject': subject,
+                                            'message': message})
         if (response.status_code != 200 and
-            response.status_code != 201 and
-            response.status_code != 202):
+                response.status_code != 201 and
+                response.status_code != 202):
             err = 'API response status code {}'.format(response.status_code)
             if 'detail' in response.json():
                 err = err + ": {}".format(response.json()['detail'])
