@@ -36,3 +36,8 @@ class UtilsTest(TestCase):
         self.assertEqual(strip_zip_suffix(fname), "foo")
         fname = "foo.bz2"
         self.assertEqual(strip_zip_suffix(fname), "foo")
+
+    def test_validate_metadata(self):
+        directory = 'ohapi/tests/data/test_directory/'
+        metadata = {'file_1.json', 'file_2.json'}
+        self.assertEqual(validate_metadata(directory, metadata), True)
