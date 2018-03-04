@@ -227,14 +227,14 @@ def message(subject, message, access_token, all_members=False,
             "One (and only one) of the following must be specified: "
             "project_members_id or all_members is set to True.")
     else:
-        response = requests.post(url, data={'all_members': all_members,
-                                            'project_member_ids': project_member_ids,
-                                            'subject': subject,
-                                            'message': message})
-        if (response.status_code != 200 and
-                response.status_code != 201 and
-                response.status_code != 202):
-            err = 'API response status code {}'.format(response.status_code)
-            if 'detail' in response.json():
-                err = err + ": {}".format(response.json()['detail'])
+        r = requests.post(url, data={'all_members': all_members,
+                                     'project_member_ids': project_member_ids,
+                                     'subject': subject,
+                                     'message': message})
+        if (r.status_code != 200 and
+                r.status_code != 201 and
+                r.status_code != 202):
+            err = 'API response status code {}'.format(r.status_code)
+            if 'detail' in r.json():
+                err = err + ": {}".format(r.json()['detail'])
             raise Exception(err)
