@@ -1,5 +1,6 @@
 from unittest import TestCase
-from ohapi.utils_fs import *
+from ohapi.utils_fs import (strip_zip_suffix, guess_tags,
+                            load_metadata_csv, validate_metadata)
 
 
 def test_test():
