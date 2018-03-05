@@ -140,8 +140,8 @@ def upload_file(target_filepath, metadata, access_token, project_member_id=None,
         target_filepath, format_size(filesize)))
 
     if not(project_member_id):
-        response = api.exchange_oauth2_member(access_token)
-        project_member_id= response['project_member_id']
+        response = exchange_oauth2_member(access_token)
+        project_member_id = response['project_member_id']
 
     r = requests.post(url,
                       files={'data_file': open(target_filepath, 'rb')},
