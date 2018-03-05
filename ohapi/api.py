@@ -7,6 +7,11 @@ try:
 except ImportError:
     import urlparse
 
+try:
+    from urllib2 import HTTPError
+except ImportError:
+    from urllib.error import HTTPError
+
 from humanfriendly import format_size, parse_size
 import requests
 
@@ -134,7 +139,8 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
             return
 
     url = urlparse.urljoin(
-        base_url, '/api/direct-sharing/project/files/upload/?{}'.format(
+        base_url,
+        '/api/direct-sharing/project/files/upload/direct/?{}'.format(
             urlparse.urlencode({'access_token': access_token})))
 
     logging.info('Uploading {} ({})'.format(
@@ -143,14 +149,27 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
     r = requests.post(url,
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
+    if r.status_code != 201:
+        raise HTTPError(url, r.status_code,
+                        'Bad response when starting upload')
 
     r2 = requests.put(url=r.json()['url'],
                       data={'data_file': open(target_filepath, 'rb')})
-    if not r2.status_code == 200:
-        err_msg = 'API response status code {}'.format(r2.status_code)
-        if 'detail' in r2.json():
-            err_msg = err_msg + ": {}".format(r2.json()['detail'])
-        raise Exception(err_msg)
+    if r2.status_code != 200:
+        raise HTTPError(r.json()['url'], r2.status_code,
+                        'Bad respose when uploading.')
+
+    complete_url = urlparse.urljoin(
+        base_url,
+        '/api/direct-sharing/project/files/upload/complete/?{}'.format(
+            urlparse.urlencode({'access_token': access_token})))
+    r3 = requests.post(
+        complete_url,
+        data={'project_member_id': project_member_id,
+              'file_id': r.json()['id']})
+    if r3.status_code != 200:
+        raise HTTPError(complete_url, r2.status_code,
+                        'Bad response when completing the upload.')
 
     logging.info('Upload complete: {}'.format(target_filepath))
 
