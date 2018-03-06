@@ -24,7 +24,7 @@ class test_get_page(unittest.TestCase):
         self.assertEqual(response['data'], [])
         self.assertEqual(response['username'], 'test_user')
         self.assertEqual(response['sources_shared'], [])
-        self.assertEqual(response['created'],'created_date_time')
+        self.assertEqual(response['created'], 'created_date_time')
 
     @my_vcr.use_cassette()
     def test_get_page_invalid_access_token(self):
