@@ -39,26 +39,26 @@ class test_message(unittest.TestCase):
     @my_vcr.use_cassette()
     def test_message_all_members_true_project_member_id_not_none(self):
         self.assertRaises(Exception,api.message, all_members=True,
-                          project_member_ids=['abcdef', 'sdf'],
+                          project_member_ids=['abcdef','sdf'],
                           **self.TESTING_KWARGS_MESSAGE)
 
     @my_vcr.use_cassette()
     def test_message_all_members_false_project_member_id_not_none_invalid_char(self):
-        response = api.message(project_member_ids=['abcdef', 'test'],
+        response = api.message(project_member_ids=['abcdef','test'],
                                **self.TESTING_KWARGS_MESSAGE)
-        assert response.json() == {"errors":{"project_member_ids":["Project member"
-                                                                   "IDs are always 8 digits long."]}}
+        assert response.json() == {"errors":{"project_member_ids":
+                ["Project member IDs are always 8 digits long."]}}
 
     @my_vcr.use_cassette()
     def test_message_all_members_false_project_member_id_not_none_invalid_digit(self):
         response = api.message(project_member_ids=['invalidPMI1',
-                                                   'invalidPMI2'],
+                               'invalidPMI2'],
                                **self.TESTING_KWARGS_MESSAGE)
         assert response.json() == {"errors":{"project_member_ids":
                                   ["Invalid project member ID(s): invalidPMI2"]}}
 
     @my_vcr.use_cassette()
     def test_message_all_members_false_project_member_id_not_none_valid(self):
-        response = api.message(project_member_ids=['validPMI1', 'validPMI2'],
+        response = api.message(project_member_ids=['validPMI1','validPMI1'],
                                **self.TESTING_KWARGS_MESSAGE)
         self.assertEqual(response.status_code, 200)
