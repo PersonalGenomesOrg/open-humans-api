@@ -144,7 +144,7 @@ def upload_file(target_filepath, metadata, access_token, project_member_id=None,
         response = exchange_oauth2_member(access_token)
         project_member_id = response['project_member_id']
 
-    requests.post(url,files={'data_file': open(target_filepath,'rb')},
+    requests.post(url, files={'data_file': open(target_filepath,'rb')},
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
 
