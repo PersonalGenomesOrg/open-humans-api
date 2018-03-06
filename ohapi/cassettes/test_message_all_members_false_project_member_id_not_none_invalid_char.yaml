@@ -1,0 +1,30 @@
+interactions:
+- request:
+    body: all_members=False&subject=test_subject&project_member_ids=abcdef&project_member_ids=test&message=test_message
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['109']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent: [python-requests/2.9.1]
+    method: POST
+    uri: https://www.openhumans.org/api/direct-sharing/project/message/
+  response:
+    body: {string: '{"errors":{"project_member_ids":["Project member IDs are always
+        8 digits long."]}}'}
+    headers:
+      Allow: ['POST, OPTIONS']
+      Cache-Control: ['no-cache, no-store, must-revalidate, max-age=0']
+      Connection: [close]
+      Content-Language: [en]
+      Content-Type: [application/json]
+      Date: ['Tue, 06 Mar 2018 21:33:01 GMT']
+      Expires: ['Tue, 06 Mar 2018 21:33:01 GMT']
+      Last-Modified: ['Tue, 06 Mar 2018 21:33:01 GMT']
+      Server: [Cowboy]
+      Vary: ['Accept, Accept-Language, Cookie']
+      Via: [1.1 vegur]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 400, message: Bad Request}
+version: 1
