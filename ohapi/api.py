@@ -113,8 +113,8 @@ def exchange_oauth2_member(access_token):
     return member_data
 
 
-def upload_file(target_filepath, metadata, access_token, project_member_id=None,
-                remote_file_info=None, base_url=OH_BASE_URL,
+def upload_file(target_filepath, metadata, access_token, project_member_id=None
+                ,remote_file_info=None, base_url=OH_BASE_URL,
                 max_bytes=MAX_FILE_DEFAULT):
     """
     Upload a file.
@@ -199,3 +199,4 @@ def message(subject, message, access_token, all_members=False,
             'project_member_ids': project_member_ids,
             'subject': subject,
             'message': message})
+        
