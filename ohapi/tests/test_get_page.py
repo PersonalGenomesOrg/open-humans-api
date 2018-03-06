@@ -16,12 +16,12 @@ class test_get_page(unittest.TestCase):
         url = ('https://www.openhumans.org/api/direct-sharing/project/'
                 'exchange-member/?access_token={}'.format(self.test_access_token))
         response = api.get_page(url)
-        self.assertEqual(response['project_member_id'], '40110289')
+        self.assertEqual(response['project_member_id'], 'PMI')
         self.assertEqual(response['message_permission'], True)
         self.assertEqual(response['data'], [])
         self.assertEqual(response['username'], 'test_user')
         self.assertEqual(response['sources_shared'], [])
-        self.assertEqual(response['created'],'2018-03-06T05:27:53.995398Z')
+        self.assertEqual(response['created'],'created_date_time')
 
     @my_vcr.use_cassette()
     def test_get_page_invalid_access_token(self):

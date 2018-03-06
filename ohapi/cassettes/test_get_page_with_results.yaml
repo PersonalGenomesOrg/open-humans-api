@@ -9,7 +9,7 @@ interactions:
     method: GET
     uri: https://www.openhumans.org/api/direct-sharing/project/exchange-member/?access_token=dQ5Phvwaz2kthlKnv0I4ytulMt8fBG
   response:
-    body: {string: '{"created":"2018-03-06T05:27:53.995398Z","project_member_id":"40110289","message_permission":true,"sources_shared":[],"username":"test_user","data":[]}'}
+    body: {string: '{"created":"created_date_time","project_member_id":"PMI","message_permission":true,"sources_shared":[],"username":"test_user","data":[]}'}
     headers:
       Allow: ['GET, HEAD, OPTIONS']
       Cache-Control: ['max-age=0, no-cache, must-revalidate, no-store']
