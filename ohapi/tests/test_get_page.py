@@ -30,5 +30,4 @@ class test_get_page(unittest.TestCase):
     def test_get_page_invalid_access_token(self):
         url = ('https://www.openhumans.org/api/direct-sharing/project/'
                 'exchange-member/?access_token={}'.format("invalid_token"))
-        self.assertRaises(Exception,api.get_page, url)
-       
+        self.assertRaises(Exception, api.get_page, url)
