@@ -1,6 +1,5 @@
 from unittest import TestCase
-from ohapi.utils_fs import (strip_zip_suffix, guess_tags,
-                            load_metadata_csv, validate_metadata)
+from ohapi.utils_fs import (guess_tags, load_metadata_csv, validate_metadata)
 
 
 def test_test():
@@ -31,12 +30,6 @@ class UtilsTest(TestCase):
         metadata_files = load_metadata_csv('ohapi/tests/data/'
                                            'metadata_proj_file_key_works.csv')
         self.assertEqual(len(metadata_files.keys()), 2)
-
-    def test_strip_zip_suffix(self):
-        fname = "foo.gz"
-        self.assertEqual(strip_zip_suffix(fname), "foo")
-        fname = "foo.bz2"
-        self.assertEqual(strip_zip_suffix(fname), "foo")
 
     def test_validate_metadata(self):
         directory = 'ohapi/tests/data/test_directory/'
