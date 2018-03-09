@@ -18,6 +18,9 @@ import requests
 
 MAX_FILE_DEFAULT = parse_size('128m')
 OH_BASE_URL = os.getenv('OHAPI_OH_BASE_URL', 'https://www.openhumans.org/')
+OH_API_BASE = OH_BASE_URL + '/api/direct-sharing'
+OH_UPLOAD = OH_API_BASE + '/project/files/upload/direct/'
+OH_UPLOAD_COMPLETE = OH_API_BASE + '/project/files/upload/complete/'
 
 
 class SettingsError(Exception):
@@ -122,9 +125,7 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
                 remote_file_info=None, base_url=OH_BASE_URL,
                 max_bytes=MAX_FILE_DEFAULT):
     filesize = os.stat(target_filepath).st_size
-    if filesize > max_bytes:
-        logging.info('Skipping {}, {} > {}'.format(
-            target_filepath, format_size(filesize), format_size(max_bytes)))
+    if exceeds_size(filesize, max_bytes, target_filepath) is True:
         return
     if remote_file_info:
         response = requests.get(remote_file_info['download_url'], stream=True)
@@ -133,34 +134,26 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
             logging.info('Skipping {}, remote exists with matching name and '
                          'file size'.format(target_filepath))
             return
-    url = urlparse.urljoin(
-        base_url,
-        '/api/direct-sharing/project/files/upload/direct/?{}'.format(
-            urlparse.urlencode({'access_token': access_token})))
+    url = '{}?{}'.format(OH_UPLOAD, urlparse.urlencode(
+        {'access_token': access_token}))
     logging.info('Uploading {} ({})'.format(
         target_filepath, format_size(filesize)))
     r = requests.post(url,
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
     if r.status_code != 201:
-        raise HTTPError(url, r.status_code,
-                        'Bad response when starting upload')
+        raise HTTPError(url, r.status_code, 'Unable to start upload')
     r2 = requests.put(url=r.json()['url'],
                       data={'data_file': open(target_filepath, 'rb')})
     if r2.status_code != 200:
         raise HTTPError(r.json()['url'], r2.status_code,
                         'Bad respose when uploading.')
-    complete_url = urlparse.urljoin(
-        base_url,
-        '/api/direct-sharing/project/files/upload/complete/?{}'.format(
-            urlparse.urlencode({'access_token': access_token})))
-    r3 = requests.post(
-        complete_url,
-        data={'project_member_id': project_member_id,
-              'file_id': r.json()['id']})
+    done = '{}?{}'.format(OH_UPLOAD_COMPLETE,
+                          urlparse.urlencode({'access_token': access_token}))
+    r3 = requests.post(done, data={'project_member_id': project_member_id,
+                                   'file_id': r.json()['id']})
     if r3.status_code != 200:
-        raise HTTPError(complete_url, r2.status_code,
-                        'Bad response when completing the upload.')
+        raise HTTPError(done, r2.status_code, 'Unable to complete upload.')
     logging.info('Upload complete: {}'.format(target_filepath))
 
 
@@ -212,3 +205,11 @@ def message(subject, message, access_token, all_members=False,
             'project_member_ids': project_member_ids,
             'subject': subject,
             'message': message})
+
+
+def exceeds_size(filesize, max_bytes=MAX_FILE_DEFAULT, target_filepath):
+    if filesize > max_bytes:
+        logging.info('Skipping {}, {} > {}'.format(
+            target_filepath, format_size(filesize), format_size(max_bytes)))
+        return True
+    return False
