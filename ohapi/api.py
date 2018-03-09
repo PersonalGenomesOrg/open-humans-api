@@ -128,19 +128,13 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
     if exceeds_size(filesize, max_bytes, target_filepath) is True:
         return
     if remote_file_info:
-        response = requests.get(remote_file_info['download_url'], stream=True)
-        remote_size = int(response.headers['Content-Length'])
-        if remote_size == filesize:
-            logging.info('Skipping {}, remote exists with matching name and '
-                         'file size'.format(target_filepath))
-            return
+        process_info(remote_file_info, filesize, target_filepath)
     url = '{}?{}'.format(OH_UPLOAD, urlparse.urlencode(
         {'access_token': access_token}))
     logging.info('Uploading {} ({})'.format(
         target_filepath, format_size(filesize)))
-    r = requests.post(url,
-                      data={'project_member_id': project_member_id,
-                            'metadata': json.dumps(metadata)})
+    r = requests.post(url, data={'project_member_id': project_member_id,
+                                 'metadata': json.dumps(metadata)})
     if r.status_code != 201:
         raise HTTPError(url, r.status_code, 'Unable to start upload')
     r2 = requests.put(url=r.json()['url'],
@@ -207,9 +201,18 @@ def message(subject, message, access_token, all_members=False,
             'message': message})
 
 
-def exceeds_size(filesize, max_bytes=MAX_FILE_DEFAULT, target_filepath):
+def exceeds_size(filesize, max_bytes, target_filepath):
     if filesize > max_bytes:
         logging.info('Skipping {}, {} > {}'.format(
             target_filepath, format_size(filesize), format_size(max_bytes)))
         return True
     return False
+
+
+def process_info(remote_file_info, filesize, target_filepath):
+    response = requests.get(remote_file_info['download_url'], stream=True)
+    remote_size = int(response.headers['Content-Length'])
+    if remote_size == filesize:
+        logging.info('Skipping {}, remote exists with matching name and '
+                     'file size'.format(target_filepath))
+        return
