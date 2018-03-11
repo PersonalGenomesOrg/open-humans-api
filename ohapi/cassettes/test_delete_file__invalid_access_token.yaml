@@ -1,0 +1,30 @@
+interactions:
+- request:
+    body: !!python/unicode all_files=True&project_member_id=59319749
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['41']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent: [python-requests/2.18.4]
+    method: POST
+    uri: https://www.openhumans.org/api/direct-sharing/project/files/delete/?access_token=ACCESSTOKEN
+  response:
+    body: {string: !!python/unicode '{"detail":"Invalid token."}'}
+    headers:
+      allow: ['POST, OPTIONS']
+      cache-control: ['must-revalidate, max-age=0, no-cache, no-store']
+      connection: [close]
+      content-language: [en]
+      content-type: [application/json]
+      date: ['Sun, 11 Mar 2018 22:10:30 GMT']
+      expires: ['Sun, 11 Mar 2018 22:10:30 GMT']
+      last-modified: ['Sun, 11 Mar 2018 22:10:30 GMT']
+      server: [Cowboy]
+      vary: ['Accept, Accept-Language, Cookie']
+      via: [1.1 vegur]
+      www-authenticate: [Bearer realm="api"]
+      x-frame-options: [SAMEORIGIN]
+    status: {code: 401, message: Unauthorized}
+version: 1

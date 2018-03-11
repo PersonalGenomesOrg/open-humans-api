@@ -2,9 +2,11 @@ from unittest import TestCase
 
 import pytest
 import vcr
+import os
 
 from ohapi.api import (
-    SettingsError, oauth2_auth_url, oauth2_token_exchange, get_page)
+    SettingsError, oauth2_auth_url, oauth2_token_exchange,
+    get_page, exchange_oauth2_member, delete_file, upload_file)
 
 parameter_defaults = {
     'CLIENT_ID_VALID': 'validclientid',
@@ -16,7 +18,8 @@ parameter_defaults = {
     'CODE_INVALID': 'invalidcode',
     'REFRESH_TOKEN_INVALID': 'invalidrefreshtoken',
     'REDIRECT_URI': 'http://127.0.0.1:5000/authorize_openhumans/',
-    'ACCESS_TOKEN': 'accesstoken'
+    'ACCESS_TOKEN': 'accesstoken',
+    'INVALID_ACCESS_TOKEN': 'invalidaccesstoken',
 }
 
 """
@@ -48,7 +51,7 @@ for param in parameter_defaults:
 
 FILTERSET = [('access_token', 'ACCESSTOKEN'), ('client_id', 'CLIENTID'),
              ('client_secret', 'CLIENTSECRET'), ('code', 'CODE'),
-             ('refresh_token', 'REFRESHTOKEN')]
+             ('refresh_token', 'REFRESHTOKEN'), ('invalid_access_token', 'INVALIDACCESSTOKEN')]
 
 my_vcr = vcr.VCR(path_transformer=vcr.VCR.ensure_suffix('.yaml'),
                  cassette_library_dir='ohapi/cassettes',
@@ -158,3 +161,19 @@ class APITestGetPage(TestCase):
         url = ('https://www.openhumans.org/api/direct-sharing/project/'
                'exchange-member/?access_token={}'.format("invalid_token"))
         self.assertRaises(Exception, get_page, url)
+
+class APITestDeleteFile(TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_delete_file__invalid_access_token(self):
+        response = delete_file(
+            access_token=INVALID_ACCESS_TOKEN, project_member_id='59319749', all_files=True)
+        assert response.json() == {"detail": "Invalid token."}
+
+    @my_vcr.use_cassette()
+    def test_delete_file_project_member_id_given(self):
+        response = delete_file(access_token=ACCESS_TOKEN,
+                               project_member_id='59319749', all_files=True)
+        self.assertEqual(response.status_code, 200)

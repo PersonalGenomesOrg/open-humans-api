@@ -2,6 +2,7 @@ from collections import OrderedDict
 import json
 import logging
 import os
+import urllib
 try:
     import urllib.parse as urlparse
 except ImportError:
