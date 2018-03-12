@@ -1,26 +1,26 @@
 interactions:
 - request:
-    body: all_members=True&message=test_message&subject=test_subject
+    body: subject=test_subject&message=test_message
     headers:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['58']
+      Content-Length: ['41']
       Content-Type: [application/x-www-form-urlencoded]
       User-Agent: [python-requests/2.9.1]
     method: POST
-    uri: https://www.openhumans.org/api/direct-sharing/project/message/
+    uri: https://www.openhumans.org/api/direct-sharing/project/message/?access_token=ACCESSTOKEN
   response:
     body: {string: '"success"'}
     headers:
       Allow: ['POST, OPTIONS']
-      Cache-Control: ['max-age=0, no-cache, must-revalidate, no-store']
+      Cache-Control: ['no-cache, max-age=0, no-store, must-revalidate']
       Connection: [close]
       Content-Language: [en]
       Content-Type: [application/json]
-      Date: ['Tue, 06 Mar 2018 20:51:15 GMT']
-      Expires: ['Tue, 06 Mar 2018 20:51:15 GMT']
-      Last-Modified: ['Tue, 06 Mar 2018 20:51:15 GMT']
+      Date: ['Sun, 11 Mar 2018 15:33:42 GMT']
+      Expires: ['Sun, 11 Mar 2018 15:33:42 GMT']
+      Last-Modified: ['Sun, 11 Mar 2018 15:33:42 GMT']
       Server: [Cowboy]
       Vary: ['Accept, Accept-Language, Cookie']
       Via: [1.1 vegur]
