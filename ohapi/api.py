@@ -121,8 +121,8 @@ def exchange_oauth2_member(access_token):
     return member_data
 
 
-def upload_file(target_filepath, metadata, access_token, project_member_id,
-                remote_file_info=None, base_url=OH_BASE_URL,
+def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
+                remote_file_info=None, project_member_id=None,
                 max_bytes=MAX_FILE_DEFAULT):
     filesize = os.stat(target_filepath).st_size
     if exceeds_size(filesize, max_bytes, target_filepath) is True:
@@ -133,21 +133,17 @@ def upload_file(target_filepath, metadata, access_token, project_member_id,
         {'access_token': access_token}))
     logging.info('Uploading {} ({})'.format(
         target_filepath, format_size(filesize)))
+    if not(project_member_id):
+        response = exchange_oauth2_member(access_token)
+        project_member_id = response['project_member_id']
     r = requests.post(url, data={'project_member_id': project_member_id,
                                  'metadata': json.dumps(metadata)})
-    if r.status_code != 201:
-        raise HTTPError(url, r.status_code, 'Unable to start upload')
     r2 = requests.put(url=r.json()['url'],
                       data={'data_file': open(target_filepath, 'rb')})
-    if r2.status_code != 200:
-        raise HTTPError(r.json()['url'], r2.status_code,
-                        'Bad respose when uploading.')
     done = '{}?{}'.format(OH_UPLOAD_COMPLETE,
                           urlparse.urlencode({'access_token': access_token}))
     r3 = requests.post(done, data={'project_member_id': project_member_id,
                                    'file_id': r.json()['id']})
-    if r3.status_code != 200:
-        raise HTTPError(done, r2.status_code, 'Unable to complete upload.')
     logging.info('Upload complete: {}'.format(target_filepath))
 
 
