@@ -7,11 +7,6 @@ try:
 except ImportError:
     import urlparse
 
-try:
-    from urllib2 import HTTPError
-except ImportError:
-    from urllib.error import HTTPError
-
 from humanfriendly import format_size, parse_size
 import requests
 
@@ -138,12 +133,12 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
         project_member_id = response['project_member_id']
     r = requests.post(url, data={'project_member_id': project_member_id,
                                  'metadata': json.dumps(metadata)})
-    r2 = requests.put(url=r.json()['url'],
-                      data={'data_file': open(target_filepath, 'rb')})
+    requests.put(url=r.json()['url'],
+                 data={'data_file': open(target_filepath, 'rb')})
     done = '{}?{}'.format(OH_UPLOAD_COMPLETE,
                           urlparse.urlencode({'access_token': access_token}))
-    r3 = requests.post(done, data={'project_member_id': project_member_id,
-                                   'file_id': r.json()['id']})
+    requests.post(done, data={'project_member_id': project_member_id,
+                              'file_id': r.json()['id']})
     logging.info('Upload complete: {}'.format(target_filepath))
 
 
