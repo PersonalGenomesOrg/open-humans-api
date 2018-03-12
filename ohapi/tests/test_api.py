@@ -134,6 +134,7 @@ class APITestOAuthTokenExchange(TestCase):
             client_secret=CLIENT_SECRET_VALID, redirect_uri=REDIRECT_URI)
         assert data == {'error': 'invalid_grant'}
 
+
 class APITestGetPage(TestCase):
 
     def setUp(self):
@@ -150,8 +151,8 @@ class APITestGetPage(TestCase):
         self.assertEqual(response['data'], [])
         self.assertEqual(response['username'], 'test_user')
         self.assertEqual(response['sources_shared'], [])
-        self.assertEqual(response['created'],'created_date_time')
-    
+        self.assertEqual(response['created'], 'created_date_time')
+
     @my_vcr.use_cassette()
     def test_get_page_invalid_access_token(self):
         url = ('https://www.openhumans.org/api/direct-sharing/project/'
