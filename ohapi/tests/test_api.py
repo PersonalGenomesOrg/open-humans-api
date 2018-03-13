@@ -211,8 +211,8 @@ class APITestMessage(TestCase):
                            subject=SUBJECT, message=MESSAGE,
                            access_token=MASTER_ACCESS_TOKEN)
         assert response.json() == {"errors": {"project_member_ids":
-                                  ["Project member IDs are always 8" +
-                                   " digits long."]}}
+                                   ["Project member IDs are always 8" +
+                                    " digits long."]}}
 
     @my_vcr.use_cassette()
     def test_message_all_members_false_projectmemberid_has_invalid_digit(self):
