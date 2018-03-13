@@ -5,7 +5,8 @@ import vcr
 import os
 
 from ohapi.api import (
-    SettingsError, oauth2_auth_url, oauth2_token_exchange, get_page, message, delete_file)
+    SettingsError, oauth2_auth_url, oauth2_token_exchange,
+    get_page, message, delete_file)
 
 parameter_defaults = {
     'CLIENT_ID_VALID': 'validclientid',
@@ -172,7 +173,6 @@ class APITestGetPage(TestCase):
         self.assertRaises(Exception, get_page, url)
 
 
-
 class APITestMessage(TestCase):
 
     def setUp(self):
@@ -214,8 +214,8 @@ class APITestMessage(TestCase):
                            subject=SUBJECT, message=MESSAGE,
                            access_token=MASTER_ACCESS_TOKEN)
         assert response.json() == {"errors": {"project_member_ids":
-                                   ["Project member IDs are always 8" +
-                                    " digits long."]}}
+                                              ["Project member IDs are always 8" +
+                                               " digits long."]}}
 
     @my_vcr.use_cassette()
     def test_message_all_members_false_projectmemberid_has_invalid_digit(self):
@@ -223,8 +223,8 @@ class APITestMessage(TestCase):
                            subject=SUBJECT, message=MESSAGE,
                            access_token=MASTER_ACCESS_TOKEN)
         assert response.json() == {"errors": {"project_member_ids":
-                                   ["Invalid project member ID(s):" +
-                                    " invalidPMI2"]}}
+                                              ["Invalid project member ID(s):" +
+                                               " invalidPMI2"]}}
 
     @my_vcr.use_cassette()
     def test_message_all_members_false_project_member_id_not_none_valid(self):
@@ -233,15 +233,16 @@ class APITestMessage(TestCase):
                            access_token=ACCESS_TOKEN)
         self.assertEqual(response.status_code, 200)
 
-class APITestDeleteFile(TestCase):
-  
-   def setUp(self):
-       pass
 
-   @my_vcr.use_cassette()
-   def test_delete_file__invalid_access_token(self):
+class APITestDeleteFile(TestCase):
+
+    def setUp(self):
+        pass
+
+    @my_vcr.use_cassette()
+    def test_delete_file__invalid_access_token(self):
         response = delete_file(
-            access_token=INVALID_ACCESS_TOKEN, project_member_id='59319749',
+            access_token=ACCESS_TOKEN_INVALID, project_member_id='59319749',
             all_files=True)
         assert response.json() == {"detail": "Invalid token."}
 
