@@ -190,7 +190,7 @@ class APITestMessage(TestCase):
     def test_message_invalid_access_token(self):
         response = message(subject=SUBJECT, message=MESSAGE,
                            access_token=ACCESS_TOKEN_INVALID)
-        assert response.json() == {"detail" :"Invalid token."}
+        assert response.json() == {"detail": "Invalid token."}
 
     @my_vcr.use_cassette()
     def test_message_all_members_true_project_member_id_none(self):
