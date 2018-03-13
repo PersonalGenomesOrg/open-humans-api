@@ -19,7 +19,7 @@ parameter_defaults = {
     'REFRESH_TOKEN_INVALID': 'invalidrefreshtoken',
     'REDIRECT_URI': 'http://127.0.0.1:5000/authorize_openhumans/',
     'ACCESS_TOKEN': 'accesstoken',
-    'INVALID_ACCESS_TOKEN': 'invalidaccesstoken',
+    'INVALID_ACCESS_TOKEN': 'invalidaccesstoken'
 }
 
 """
@@ -51,7 +51,8 @@ for param in parameter_defaults:
 
 FILTERSET = [('access_token', 'ACCESSTOKEN'), ('client_id', 'CLIENTID'),
              ('client_secret', 'CLIENTSECRET'), ('code', 'CODE'),
-             ('refresh_token', 'REFRESHTOKEN'), ('invalid_access_token', 'INVALIDACCESSTOKEN')]
+             ('refresh_token', 'REFRESHTOKEN'),
+             ('invalid_access_token', 'INVALIDACCESSTOKEN')]
 
 my_vcr = vcr.VCR(path_transformer=vcr.VCR.ensure_suffix('.yaml'),
                  cassette_library_dir='ohapi/cassettes',
@@ -162,14 +163,17 @@ class APITestGetPage(TestCase):
                'exchange-member/?access_token={}'.format("invalid_token"))
         self.assertRaises(Exception, get_page, url)
 
+
 class APITestDeleteFile(TestCase):
 
     def setUp(self):
         pass
 
+    @my_vcr.use_cassette()
     def test_delete_file__invalid_access_token(self):
         response = delete_file(
-            access_token=INVALID_ACCESS_TOKEN, project_member_id='59319749', all_files=True)
+            access_token=INVALID_ACCESS_TOKEN, project_member_id='59319749',
+            all_files=True)
         assert response.json() == {"detail": "Invalid token."}
 
     @my_vcr.use_cassette()
