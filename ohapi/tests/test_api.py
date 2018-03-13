@@ -173,7 +173,7 @@ class APITestMessage(TestCase):
 
     def setUp(self):
         pass
-    
+
     @my_vcr.use_cassette()
     def test_message_valid_access_token(self):
         response = message(subject=SUBJECT, message=MESSAGE,
@@ -185,13 +185,13 @@ class APITestMessage(TestCase):
         response = message(subject=SUBJECT, message=MESSAGE,
                            access_token=ACCESS_TOKEN_EXPIRED)
         assert response.json() == {"detail":"Expired token."}
-    
+
     @my_vcr.use_cassette()
     def test_message_invalid_access_token(self):
         response = message(subject=SUBJECT, message=MESSAGE,
                            access_token=ACCESS_TOKEN_INVALID)
         assert response.json() == {"detail":"Invalid token."}
-    
+
     @my_vcr.use_cassette()
     def test_message_all_members_true_project_member_id_none(self):
         response = message(all_members=True, subject=SUBJECT, message=MESSAGE,
@@ -206,21 +206,22 @@ class APITestMessage(TestCase):
                           access_token=ACCESS_TOKEN)
 
     @my_vcr.use_cassette()
-    def test_message_all_members_false_project_member_id_not_none_invalid_char(self):
+    def test_message_all_members_false_projectmemberid_has_invalid_char(self):
         response = message(project_member_ids=['abcdef1', 'test'],
                            subject=SUBJECT, message=MESSAGE,
                            access_token=MASTER_ACCESS_TOKEN)
-        assert response.json() == {"errors":{"project_member_ids":
+        assert response.json() == {"errors": {"project_member_ids":
                                   ["Project member IDs are always 8" +
                                    " digits long."]}}
 
     @my_vcr.use_cassette()
-    def test_message_all_members_false_project_member_id_not_none_invalid_digit(self):
+    def test_message_all_members_false_projectmemberid_has_invalid_digit(self):
         response = message(project_member_ids=[INVALID_PMI1, INVALID_PMI2],
                            subject=SUBJECT, message=MESSAGE,
                            access_token=MASTER_ACCESS_TOKEN)
-        assert response.json() == {"errors":{"project_member_ids":
-                                  ["Invalid project member ID(s): invalidPMI2"]}}
+        assert response.json() == {"errors": {"project_member_ids":
+                                   ["Invalid project member ID(s):"+
+                                   " invalidPMI2"]}}
 
     @my_vcr.use_cassette()
     def test_message_all_members_false_project_member_id_not_none_valid(self):
