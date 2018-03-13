@@ -184,7 +184,7 @@ class APITestMessage(TestCase):
     def test_message_expired_access_token(self):
         response = message(subject=SUBJECT, message=MESSAGE,
                            access_token=ACCESS_TOKEN_EXPIRED)
-        assert response.json() == {"detail":"Expired token."}
+        assert response.json() == {"detail": "Expired token."}
 
     @my_vcr.use_cassette()
     def test_message_invalid_access_token(self):
