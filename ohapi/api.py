@@ -154,7 +154,7 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
         response = exchange_oauth2_member(access_token)
         project_member_id = response['project_member_id']
 
-    requests.post(url, files={'data_file': open(target_filepath, 'rb')},
+    r = requests.post(url, files={'data_file': open(target_filepath, 'rb')},
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
     if (r.status_code not in [200, 201, 202]):
@@ -186,7 +186,7 @@ def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
             "One (and only one) of the following must be specified: "
             "file_basename, file_id, or all_files is set to True.")
     response = requests.post(url, data=data)
-    if (response.status_code not in [202, 204]):
+    if (response.status_code not in [202, 204, 200]):
         err_msg = 'API response status code {}'.format(response.status_code)
         if 'detail' in response.json():
             err_msg = err_msg + ": {}".format(response.json()['detail'])
