@@ -257,3 +257,16 @@ class APITestDeleteFile(TestCase):
         response = delete_file(access_token=ACCESS_TOKEN, all_files=True,
                                project_member_id='1234')
         self.assertEqual(response.status_code, 400)
+
+    @my_vcr.use_cassette()
+    def test_delete_file__expired_access_token(self):
+        response = delete_file(access_token=ACCESS_TOKEN_EXPIRED, all_files=True,
+                               project_member_id='59319749')
+        assert response.json() == {"detail": "Expired token."}
+
+    @my_vcr.use_cassette()
+    def test_delete_file__valid_access_token(self):
+        response = delete_file(
+            access_token=ACCESS_TOKEN, project_member_id='59319749',
+            all_files=True)
+        self.assertEqual(response.status_code, 200)
