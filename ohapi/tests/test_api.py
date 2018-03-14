@@ -177,6 +177,7 @@ class APITestMessage(TestCase):
     def setUp(self):
         pass
 
+    @my_vcr.use_cassette()
     def test_message_valid_access_token(self):
         response = message(subject=SUBJECT, message=MESSAGE,
                            access_token=ACCESS_TOKEN)
