@@ -2,7 +2,6 @@ from unittest import TestCase
 
 import pytest
 import vcr
-import os
 
 from ohapi.api import (
     SettingsError, oauth2_auth_url, oauth2_token_exchange,
@@ -213,18 +212,20 @@ class APITestMessage(TestCase):
         response = message(project_member_ids=['abcdef1', 'test'],
                            subject=SUBJECT, message=MESSAGE,
                            access_token=MASTER_ACCESS_TOKEN)
-        assert response.json() == {"errors": {"project_member_ids":
-                                              ["Project member IDs are always 8" +
-                                               " digits long."]}}
+        assert response.json() == {"errors":
+                                   {"project_member_ids":
+                                    ["Project member IDs are always 8" +
+                                     " digits long."]}}
 
     @my_vcr.use_cassette()
     def test_message_all_members_false_projectmemberid_has_invalid_digit(self):
         response = message(project_member_ids=[INVALID_PMI1, INVALID_PMI2],
                            subject=SUBJECT, message=MESSAGE,
                            access_token=MASTER_ACCESS_TOKEN)
-        assert response.json() == {"errors": {"project_member_ids":
-                                              ["Invalid project member ID(s):" +
-                                               " invalidPMI2"]}}
+        assert response.json() == {"errors":
+                                   {"project_member_ids":
+                                    ["Invalid project member ID(s):" +
+                                     " invalidPMI2"]}}
 
     @my_vcr.use_cassette()
     def test_message_all_members_false_project_member_id_not_none_valid(self):
@@ -260,7 +261,8 @@ class APITestDeleteFile(TestCase):
 
     @my_vcr.use_cassette()
     def test_delete_file__expired_access_token(self):
-        response = delete_file(access_token=ACCESS_TOKEN_EXPIRED, all_files=True,
+        response = delete_file(access_token=ACCESS_TOKEN_EXPIRED,
+                               all_files=True,
                                project_member_id='59319749')
         assert response.json() == {"detail": "Expired token."}
 
