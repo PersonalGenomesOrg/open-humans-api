@@ -123,7 +123,8 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
     if exceeds_size(filesize, max_bytes, target_filepath) is True:
         return
     if remote_file_info:
-        process_info(remote_file_info, filesize, target_filepath)
+        if process_info(remote_file_info, filesize, target_filepath) is False:
+            return
     url = '{}?{}'.format(OH_UPLOAD, urlparse.urlencode(
         {'access_token': access_token}))
     logging.info('Uploading {} ({})'.format(
@@ -206,4 +207,5 @@ def process_info(remote_file_info, filesize, target_filepath):
     if remote_size == filesize:
         logging.info('Skipping {}, remote exists with matching name and '
                      'file size'.format(target_filepath))
-        return
+        return False
+    return True
