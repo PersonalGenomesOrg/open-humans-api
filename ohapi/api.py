@@ -113,9 +113,7 @@ def exchange_oauth2_member(access_token):
 def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
                 remote_file_info=None, project_member_id=None,
                 max_bytes=MAX_FILE_DEFAULT):
-    """
-    Upload a file.
-    """
+
     filesize = os.stat(target_filepath).st_size
     if filesize > max_bytes:
         logging.info('Skipping {}, {} > {}'.format(
@@ -146,7 +144,6 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
     handle_error(r)
-
     logging.info('Upload complete: {}'.format(target_filepath))
 
 
