@@ -121,12 +121,7 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
         return
 
     if remote_file_info:
-        response = requests.get(remote_file_info['download_url'], stream=True)
-        handle_error(response)
-        remote_size = int(response.headers['Content-Length'])
-        if remote_size == filesize:
-            logging.info('Skipping {}, remote exists with matching name and '
-                         'file size'.format(target_filepath))
+        if process_info(remote_file_info, filesize, target_filepath) is False:
             return
 
     url = urlparse.urljoin(
@@ -211,3 +206,13 @@ def handle_error(r):
             info = info + ": {}".format(r.json()['detail'])
         raise Exception(info)
         return
+
+
+def process_info(remote_file_info, filesize, target_filepath):
+    response = requests.get(remote_file_info['download_url'], stream=True)
+    remote_size = int(response.headers['Content-Length'])
+    if remote_size == filesize:
+        logging.info('Skipping {}, remote exists with matching name and '
+                     'file size'.format(target_filepath))
+        return False
+    return True
