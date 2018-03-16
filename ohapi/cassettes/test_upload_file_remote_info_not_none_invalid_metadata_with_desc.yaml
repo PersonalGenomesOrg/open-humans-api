@@ -1,0 +1,69 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.9.1]
+    method: GET
+    uri: https://stackoverflow.com/questions/33184342/how-do-i-mock-an-open-write-without-getting-a-no-such-file-or-directory
+  response:
+    body:
+      string: some binary text
+    headers:
+      Accept-Ranges: [bytes]
+      Age: ['0']
+      Cache-Control: [private]
+      Connection: [keep-alive]
+      Content-Encoding: [gzip]
+      Content-Length: ['24844']
+      Content-Type: [text/html; charset=utf-8]
+      Date: ['Fri, 16 Mar 2018 14:37:01 GMT']
+      Last-Modified: ['Sun, 21 Jan 2018 08:51:55 GMT']
+      Set-Cookie: ['prov=7fce2fe0-6fa3-08f1-5bf3-7d4a3a704dd8; domain=.stackoverflow.com;
+          expires=Fri, 01-Jan-2055 00:00:00 GMT; path=/; HttpOnly']
+      Strict-Transport-Security: [max-age=15552000]
+      Vary: ['Accept-Encoding,Fastly-SSL']
+      Via: [1.1 varnish]
+      X-Cache: [MISS]
+      X-Cache-Hits: ['0']
+      X-DNS-Prefetch-Control: ['off']
+      X-Frame-Options: [SAMEORIGIN]
+      X-Request-Guid: [27a45bcc-06a4-4278-a597-6afa69ff373d]
+      X-Served-By: [cache-sin18024-SIN]
+      X-Timer: ['S1521211021.014368,VS0,VE250']
+    status: {code: 200, message: OK}
+- request:
+    body: "--0aaadc268d6b46459a799b3a19210e40\r\nContent-Disposition: form-data; name=\"\
+      metadata\"\r\n\r\n{\"description\": \"test_file\"}\r\n--0aaadc268d6b46459a799b3a19210e40\r\
+      \nContent-Disposition: form-data; name=\"project_member_id\"\r\n\r\n40110289\r\
+      \n--0aaadc268d6b46459a799b3a19210e40\r\nContent-Disposition: form-data; name=\"\
+      data_file\"; filename=\"foo\"\r\n\r\nsome stuff\r\n--0aaadc268d6b46459a799b3a19210e40--\r\
+      \n"
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['377']
+      Content-Type: [multipart/form-data; boundary=0aaadc268d6b46459a799b3a19210e40]
+      User-Agent: [python-requests/2.9.1]
+    method: POST
+    uri: https://www.openhumans.org/api/direct-sharing/project/files/upload/?access_token=4cKZraLgEam5puFD1kIf1qrJyLX45F
+  response:
+    body: {string: '{"metadata":["\"tags\" is a required field of the metadata"]}'}
+    headers:
+      Allow: ['POST, OPTIONS']
+      Cache-Control: ['max-age=0, no-cache, no-store, must-revalidate']
+      Connection: [close]
+      Content-Language: [en]
+      Content-Type: [application/json]
+      Date: ['Fri, 16 Mar 2018 14:37:05 GMT']
+      Expires: ['Fri, 16 Mar 2018 14:37:05 GMT']
+      Last-Modified: ['Fri, 16 Mar 2018 14:37:05 GMT']
+      Server: [Cowboy]
+      Vary: ['Accept, Accept-Language, Cookie']
+      Via: [1.1 vegur]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 400, message: Bad Request}
+version: 1
