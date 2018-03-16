@@ -27,10 +27,10 @@ parameter_defaults = {
     'VALID_PMI2': 'validprojectmemberid2',
     'SUBJECT': 'testsubject',
     'MESSAGE': 'testmessage',
-    'REMOTE_FILE_INFO': 'remotefileinfo',
+    'REMOTE_FILE_INFO': {"download_url": "https://valid_url"},
     'FILE_METADATA': 'filemetadata',
     'FILE_METADATA_INVALID': 'file_metadata_invalid',
-    'FILE_METADATA_INVALID': 'file_metadata_invalid_with_desc',
+    'FILE_METADATA_INVALID_WITH_DESC': 'file_metadata_invalid_with_desc',
     'MAX_BYTES': 'maxbytes'
 }
 
@@ -367,7 +367,7 @@ class APITestUpload(TestCase):
                                            ["The submitted file is empty."]}
 
     def test_upload_file_remote_info_not_none_valid(self):
-        with vcr.use_cassette('ohapi/cassettes/test_upload_file_' +
+        with my_vcr.use_cassette('ohapi/cassettes/test_upload_file_' +
                               'remote_info_not_none_valid.yaml') as cass:
             with patch('__main__.open', mock_open(), create=True):
                 with open('foo', 'w') as h:
@@ -383,9 +383,10 @@ class APITestUpload(TestCase):
                                  .decode('utf-8'),
                                  '{"id": "file_id"}')
 
-    def test_upload_file_empty_remote_info_not_none_invalid_access_token(self):
-        with vcr.use_cassette('ohapi/cassettes/test_upload_file_remote_info_' +
-                              'not_none_invalid_access_token.yaml') as cass:
+    def test_upload_file_remote_info_not_none_invalid_access_token(self):
+        with my_vcr.use_cassette('ohapi/cassettes/test_upload_file_remote' +
+                                 '_info_not_none_invalid_access_' +
+                                 'token.yaml') as cass:
             with patch('__main__.open', mock_open(), create=True):
                 with open('foo', 'w') as h:
                     h.write('some stuff')
@@ -400,8 +401,9 @@ class APITestUpload(TestCase):
                                  '{"detail": "Invalid token."}')
 
     def test_upload_file_remote_info_not_none_expired_access_token(self):
-        with vcr.use_cassette('ohapi/cassettes/test_upload_file_remote_info_' +
-                              'not_none_expired_access_token.yaml') as cass:
+        with my_vcr.use_cassette('ohapi/cassettes/test_upload_file_remote_' +
+                                 'info_not_none_expired_access_' +
+                                 'token.yaml') as cass:
             with patch('__main__.open', mock_open(), create=True):
                 with open('foo', 'w') as h:
                     h.write('some stuff')
@@ -416,8 +418,8 @@ class APITestUpload(TestCase):
                                  '{"detail": "Expired token."}')
 
     def test_upload_file_empty_remote_info_not_none(self):
-        with vcr.use_cassette('ohapi/cassettes/test_upload_file_empty_remote' +
-                              '_info_not_none.yaml') as cass:
+        with my_vcr.use_cassette('ohapi/cassettes/test_upload_file_empty_' +
+                                 'remote_info_not_none.yaml') as cass:
             with patch('__main__.open', mock_open(), create=True):
                 with open('foo', 'w') as h:
                     h.write('')
@@ -445,9 +447,9 @@ class APITestUpload(TestCase):
                               remote_file_info=REMOTE_FILE_INFO)
 
     def test_upload_file_remote_info_not_none_invalid_metadata_with_desc(self):
-        with vcr.use_cassette('ohapi/cassettes/test_upload_file_remote_info_' +
-                              'not_none_invalid_metadata_with_' +
-                              'desc.yaml') as cass:
+        with my_vcr.use_cassette('ohapi/cassettes/test_upload_file_remote_' +
+                                 'info_not_none_invalid_metadata_with_' +
+                                 'desc.yaml') as cass:
             with patch('__main__.open', mock_open(), create=True):
                 with open('foo', 'w') as h:
                     h.write('some stuff')
@@ -463,8 +465,8 @@ class APITestUpload(TestCase):
                                  'field of the metadata"]}')
 
     def test_upload_file_remote_info_not_none_invalid_metadata(self):
-        with vcr.use_cassette('ohapi/cassettes/test_upload_file_remote_info_' +
-                              'not_none_invalid_metadata.yaml') as cass:
+        with my_vcr.use_cassette('ohapi/cassettes/test_upload_file_remote_in' +
+                                 'fo_not_none_invalid_metadata.yaml') as cass:
             with patch('__main__.open', mock_open(), create=True):
                 with open('foo', 'w') as h:
                     h.write('some stuff')
