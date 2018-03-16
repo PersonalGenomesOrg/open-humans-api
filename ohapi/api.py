@@ -139,7 +139,6 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
     if not(project_member_id):
         response = exchange_oauth2_member(access_token)
         project_member_id = response['project_member_id']
-
     r = requests.post(url, files={'data_file': open(target_filepath, 'rb')},
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
@@ -199,6 +198,7 @@ def message(subject, message, access_token, all_members=False,
                                      'subject': subject,
                                      'message': message})
         handle_error(r)
+        return r
 
 
 def handle_error(r):
