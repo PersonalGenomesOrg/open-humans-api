@@ -1,6 +1,5 @@
 from unittest import TestCase
 from ohapi.projects import OHProject
-import vcr
 
 parameter_defaults = {
     'MEMBER_DATA': {"data": [{"basename": 1}]},
@@ -17,18 +16,6 @@ except ImportError:
 
 for param in parameter_defaults:
     locals()[param] = parameter_defaults[param]
-
-
-FILTERSET = [('access_token', 'ACCESSTOKEN'), ('client_id', 'CLIENTID'),
-             ('client_secret', 'CLIENTSECRET'), ('code', 'CODE'),
-             ('refresh_token', 'REFRESHTOKEN'),
-             ('invalid_access_token', 'INVALIDACCESSTOKEN')]
-
-my_vcr = vcr.VCR(path_transformer=vcr.VCR.ensure_suffix('.yaml'),
-                 cassette_library_dir='ohapi/cassettes',
-                 filter_headers=[('Authorization', 'XXXXXXXX')],
-                 filter_query_parameters=FILTERSET,
-                 filter_post_data_parameters=FILTERSET)
 
 
 class ProjectsTest(TestCase):
