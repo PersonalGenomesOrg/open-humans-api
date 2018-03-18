@@ -1,6 +1,7 @@
 from unittest import TestCase
 from ohapi.utils_fs import (guess_tags, load_metadata_csv,
-                            validate_metadata, characterize_local_files)
+                            validate_metadata, characterize_local_files,
+                            read_id_list)
 from humanfriendly import parse_size
 import arrow
 import os
@@ -62,3 +63,14 @@ class UtilsTest(TestCase):
                                  'creation_date': CREATION_DATE,
                                  'description': '',
                                  'tags': ['json']}})
+
+    def test_read_id_list_filepath_not_given(self):
+        response = read_id_list(filepath=None)
+        self.assertEqual(response, None)
+
+    def test_read_id_list_filepath_given(self):
+        filename = 'sample.txt'
+        filedir = 'ohapi/tests/data/test_id_dir/'
+        FILEPATH = os.path.join(filedir, filename)
+        response = read_id_list(filepath=FILEPATH)
+        self.assertEqual(response, ['12345678'])
