@@ -7,6 +7,22 @@ parameter_defaults = {
     'MAX_SIZE': 'max_size',
 }
 
+"""
+_config_params_api.py is not usually present.  You can create this to use valid
+codes and tokens if you wish to record new cassettes. If present, this file is
+used to overwrite `parameter_defaults` with the (hopefully valid, but secret)
+items in the file. DO NOT COMMIT IT TO GIT!
+
+To get started, do:
+cp _config_params_api.py.example _config_params_api.py
+
+Edit _config_params_api.py to define valid secret codes, tokens, etc.
+
+Run a specific function to (re)create an associated cassette, e.g.:
+pytest ohapi/tests/test_projects.py::ProjectsTest::test_get_member_file_data_member_data_none
+
+(This only makes a new cassette if one doesn't already exist!)
+"""
 try:
     from _config_params_api import params
     for param in params:
