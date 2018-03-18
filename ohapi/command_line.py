@@ -39,11 +39,12 @@ def set_log_level(debug, verbose):
 @click.option('--memberlist', help='Text file with whitelist IDs to retrieve')
 @click.option('--excludelist', help='Text file with blacklist IDs to avoid')
 def download_cli(directory, master_token=None, member=None, access_token=None,
-                 source=None, project_data=False, max_size='128m', verbose=False,
-                 debug=False, memberlist=None, excludelist=None):
-    return download(directory, master_token, member, access_token,
-                    source, project_data, max_size, verbose,
-                    debug, memberlist, excludelist)
+                 source=None, project_data=False, max_size='128m',
+                 verbose=False, debug=False, memberlist=None,
+                 excludelist=None):
+    return download(directory, master_token, member, access_token, source,
+                    project_data, max_size, verbose, debug, memberlist,
+                    excludelist)
 
 
 def download(directory, master_token=None, member=None, access_token=None,
@@ -117,7 +118,8 @@ def download(directory, master_token=None, member=None, access_token=None,
 @click.option('--debug', help='Show DEBUG level logging.', is_flag=True)
 @click.option('--output-csv', help="Output project metedata CSV",
               required=True)
-def download_metadata_cli(master_token, output_csv, verbose=False, debug=False):
+def download_metadata_cli(master_token, output_csv, verbose=False,
+                          debug=False):
     return download_metadata(master_token, output_csv, verbose, debug)
 
 
