@@ -170,7 +170,8 @@ def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
         raise ValueError(
             "One (and only one) of the following must be specified: "
             "file_basename, file_id, or all_files is set to True.")
-    requests.post(url, data=data)
+    r = requests.post(url, data=data)
+    return r
 
 
 # Alternate names for the same functions.
@@ -187,15 +188,15 @@ def message(subject, message, access_token, all_members=False,
         base_url, '/api/direct-sharing/project/message/?{}'.format(
             urlparse.urlencode({'access_token': access_token})))
     if not(all_members) and not(project_member_ids):
-        requests.post(url, data={'subject': subject,
-                                 'message': message})
+        return requests.post(url, data={'subject': subject,
+                                        'message': message})
     elif all_members and project_member_ids:
         raise ValueError(
             "One (and only one) of the following must be specified: "
             "project_members_id or all_members is set to True.")
     else:
-        requests.post(url, data={
-            'all_members': all_members,
-            'project_member_ids': project_member_ids,
-            'subject': subject,
-            'message': message})
+        return requests.post(url, data={
+               'all_members': all_members,
+               'project_member_ids': project_member_ids,
+               'subject': subject,
+               'message': message})
