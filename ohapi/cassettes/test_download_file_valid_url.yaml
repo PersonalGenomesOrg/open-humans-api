@@ -1,0 +1,139 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://www.openhumans.org/data-management/datafile-download/13627/
+  response:
+    body: {string: ''}
+    headers:
+      Connection: [close]
+      Content-Language: [en]
+      Content-Type: [text/html; charset=utf-8]
+      Date: ['Mon, 19 Mar 2018 07:13:39 GMT']
+      Location: ['https://open-humans-production.s3.amazonaws.com/member-files/pgp/37f94bf8-1f2d-11e7-8f3e-c2ab6500b583/PGP-Harvard-hu6BC6F3-surveys.json?Signature=zN8vrp3rx7J5TpFbdSL%2Bkrimak4%3D&Expires=1521447219&AWSAccessKeyId=AKIAIKNTFUJJTNS6N7HA&response-content-disposition=attachment']
+      Server: [Cowboy]
+      Vary: ['Accept-Language, Cookie']
+      Via: [1.1 vegur]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 302, message: Found}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://open-humans-production.s3.amazonaws.com/member-files/pgp/37f94bf8-1f2d-11e7-8f3e-c2ab6500b583/PGP-Harvard-hu6BC6F3-surveys.json?AWSAccessKeyId=AKIAIKNTFUJJTNS6N7HA&Expires=1521447219&Signature=zN8vrp3rx7J5TpFbdSL%2Bkrimak4%3D&response-content-disposition=attachment
+  response:
+    body: {string: "[\n  {\n    \"responses\": [\n      {\n        \"query\": \"Timestamp\",
+        \n        \"response\": \"7/16/2011 16:40:30\"\n      }, \n      {\n        \"query\":
+        \"Year of birth\", \n        \"response\": \"21-29 years\"\n      }, \n      {\n
+        \       \"query\": \"Which statement best describes you?\", \n        \"response\":
+        \"I am comfortable making my genome sequence data publicly available without
+        prior review.\"\n      }, \n      {\n        \"query\": \"Severe disease or
+        rare genetic trait\", \n        \"response\": \"No\"\n      }, \n      {\n
+        \       \"query\": \"Sex/Gender\", \n        \"response\": \"Male\"\n      },
+        \n      {\n        \"query\": \"Race/ethnicity\", \n        \"response\":
+        \"White\"\n      }, \n      {\n        \"query\": \"Maternal grandmother:
+        Country of origin\", \n        \"response\": \"United States\"\n      }, \n
+        \     {\n        \"query\": \"Paternal grandmother: Country of origin\", \n
+        \       \"response\": \"United States\"\n      }, \n      {\n        \"query\":
+        \"Paternal grandfather: Country of origin\", \n        \"response\": \"United
+        States\"\n      }, \n      {\n        \"query\": \"Maternal grandfather: Country
+        of origin\", \n        \"response\": \"United States\"\n      }, \n      {\n
+        \       \"query\": \"Enrollment of relatives\", \n        \"response\": \"No\"\n
+        \     }, \n      {\n        \"query\": \"Enrollment of older individuals\",
+        \n        \"response\": \"Yes\"\n      }, \n      {\n        \"query\": \"Enrollment
+        of parents\", \n        \"response\": \"Yes\"\n      }, \n      {\n        \"query\":
+        \"Have you uploaded genetic data to your PGP participant profile?\", \n        \"response\":
+        \"No, I have no genetic data.\"\n      }, \n      {\n        \"query\": \"Have
+        you used the PGP web interface to record a designated proxy?\", \n        \"response\":
+        \"Yes\"\n      }, \n      {\n        \"query\": \"Have you uploaded health
+        record data using our Google Health or Microsoft Healthvault interfaces?\",
+        \n        \"response\": \"No, but I plan to\"\n      }, \n      {\n        \"query\":
+        \"Blood sample\", \n        \"response\": \"Yes\"\n      }, \n      {\n        \"query\":
+        \"Saliva sample\", \n        \"response\": \"Yes\"\n      }, \n      {\n        \"query\":
+        \"Microbiome samples\", \n        \"response\": \"Yes\"\n      }, \n      {\n
+        \       \"query\": \"Tissue samples from surgery\", \n        \"response\":
+        \"Yes\"\n      }, \n      {\n        \"query\": \"Tissue samples from autopsy\",
+        \n        \"response\": \"Yes\"\n      }\n    ], \n    \"timestamp\": \"7/16/2011
+        16:40:30\", \n    \"title\": \"PGP Participant Survey\"\n  }, \n  {\n    \"responses\":
+        [\n      {\n        \"query\": \"Timestamp\", \n        \"response\": \"10/12/2012
+        17:44:18\"\n      }\n    ], \n    \"timestamp\": \"10/12/2012 17:44:18\",
+        \n    \"title\": \"PGP Trait & Disease Survey 2012: Cancers\"\n  }, \n  {\n
+        \   \"responses\": [\n      {\n        \"query\": \"Timestamp\", \n        \"response\":
+        \"10/12/2012 17:48:25\"\n      }, \n      {\n        \"query\": \"Have you
+        ever been diagnosed with any of the following conditions?\", \n        \"response\":
+        \"Hypothyroidism, High triglycerides (hypertriglyceridemia)\"\n      }\n    ],
+        \n    \"timestamp\": \"10/12/2012 17:48:25\", \n    \"title\": \"PGP Trait
+        & Disease Survey 2012: Endocrine, Metabolic, Nutritional, and Immunity\"\n
+        \ }, \n  {\n    \"responses\": [\n      {\n        \"query\": \"Timestamp\",
+        \n        \"response\": \"10/12/2012 17:50:48\"\n      }, \n      {\n        \"query\":
+        \"Have you ever been diagnosed with any of the following conditions?\", \n
+        \       \"response\": \"Iron deficiency anemia\"\n      }\n    ], \n    \"timestamp\":
+        \"10/12/2012 17:50:48\", \n    \"title\": \"PGP Trait & Disease Survey 2012:
+        Blood\"\n  }, \n  {\n    \"responses\": [\n      {\n        \"query\": \"Timestamp\",
+        \n        \"response\": \"10/12/2012 17:57:59\"\n      }\n    ], \n    \"timestamp\":
+        \"10/12/2012 17:57:59\", \n    \"title\": \"PGP Trait & Disease Survey 2012:
+        Nervous System\"\n  }, \n  {\n    \"responses\": [\n      {\n        \"query\":
+        \"Timestamp\", \n        \"response\": \"10/12/2012 18:01:55\"\n      }, \n
+        \     {\n        \"query\": \"Have you ever been diagnosed with one of the
+        following conditions?\", \n        \"response\": \"Myopia (Nearsightedness),
+        Tinnitus\"\n      }\n    ], \n    \"timestamp\": \"10/12/2012 18:01:55\",
+        \n    \"title\": \"PGP Trait & Disease Survey 2012: Vision and hearing\"\n
+        \ }, \n  {\n    \"responses\": [\n      {\n        \"query\": \"Timestamp\",
+        \n        \"response\": \"10/12/2012 18:04:32\"\n      }, \n      {\n        \"query\":
+        \"Have you ever been diagnosed with one of the following conditions?\", \n
+        \       \"response\": \"Mitral valve prolapse\"\n      }\n    ], \n    \"timestamp\":
+        \"10/12/2012 18:04:32\", \n    \"title\": \"PGP Trait & Disease Survey 2012:
+        Circulatory System\"\n  }, \n  {\n    \"responses\": [\n      {\n        \"query\":
+        \"Timestamp\", \n        \"response\": \"10/12/2012 18:06:21\"\n      }, \n
+        \     {\n        \"query\": \"Other condition not listed here?\", \n        \"response\":
+        \"spontaneous pneumothorax\"\n      }\n    ], \n    \"timestamp\": \"10/12/2012
+        18:06:21\", \n    \"title\": \"PGP Trait & Disease Survey 2012: Respiratory
+        System\"\n  }, \n  {\n    \"responses\": [\n      {\n        \"query\": \"Timestamp\",
+        \n        \"response\": \"10/12/2012 18:08:04\"\n      }, \n      {\n        \"query\":
+        \"Have you ever been diagnosed with any of the following conditions?\", \n
+        \       \"response\": \"Canker sores (oral ulcers)\"\n      }\n    ], \n    \"timestamp\":
+        \"10/12/2012 18:08:04\", \n    \"title\": \"PGP Trait & Disease Survey 2012:
+        Digestive System\"\n  }, \n  {\n    \"responses\": [\n      {\n        \"query\":
+        \"Timestamp\", \n        \"response\": \"10/12/2012 18:10:01\"\n      }\n
+        \   ], \n    \"timestamp\": \"10/12/2012 18:10:01\", \n    \"title\": \"PGP
+        Trait & Disease Survey 2012: Genitourinary Systems\"\n  }, \n  {\n    \"responses\":
+        [\n      {\n        \"query\": \"Timestamp\", \n        \"response\": \"10/12/2012
+        18:14:14\"\n      }, \n      {\n        \"query\": \"Have you ever been diagnosed
+        with any of the following conditions?\", \n        \"response\": \"Dandruff,
+        Hair loss (includes female and male pattern baldness), Hyperhidrosis (excessive
+        sweating), Acne\"\n      }, \n      {\n        \"query\": \"Other condition
+        not listed here?\", \n        \"response\": \"sebaceous cyst\"\n      }\n
+        \   ], \n    \"timestamp\": \"10/12/2012 18:14:14\", \n    \"title\": \"PGP
+        Trait & Disease Survey 2012: Skin and Subcutaneous Tissue\"\n  }, \n  {\n
+        \   \"responses\": [\n      {\n        \"query\": \"Timestamp\", \n        \"response\":
+        \"10/12/2012 18:17:32\"\n      }, \n      {\n        \"query\": \"Other condition
+        not listed here?\", \n        \"response\": \"torn meniscus\"\n      }\n    ],
+        \n    \"timestamp\": \"10/12/2012 18:17:32\", \n    \"title\": \"PGP Trait
+        & Disease Survey 2012: Musculoskeletal System and Connective Tissue\"\n  },
+        \n  {\n    \"responses\": [\n      {\n        \"query\": \"Timestamp\", \n
+        \       \"response\": \"10/12/2012 18:18:54\"\n      }\n    ], \n    \"timestamp\":
+        \"10/12/2012 18:18:54\", \n    \"title\": \"PGP Trait & Disease Survey 2012:
+        Congenital Traits and Anomalies\"\n  }\n]"}
+    headers:
+      Accept-Ranges: [bytes]
+      Content-Disposition: [attachment]
+      Content-Length: ['6591']
+      Content-Type: [application/json]
+      Date: ['Mon, 19 Mar 2018 07:13:43 GMT']
+      ETag: ['"2b79e4f5c7aaa0c7de17c14dc70b8760"']
+      Last-Modified: ['Wed, 12 Apr 2017 03:08:00 GMT']
+      Server: [AmazonS3]
+      x-amz-id-2: [2cuJyGAhvvf/iNb8j6qAWCnAMrEn6ui0W815+2+cpKYfeVMKhtIdYcP6Zb7eGKl8gWLl2JH1r7k=]
+      x-amz-request-id: [87DB12F56688C31A]
+      x-amz-version-id: [BF_dAxPJKQYzmzrIN6Qiokfm3rs4srDu]
+    status: {code: 200, message: OK}
+version: 1

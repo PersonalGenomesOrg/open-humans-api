@@ -211,6 +211,7 @@ def download_file(download_url, target_filepath, max_bytes=MAX_FILE_DEFAULT):
                 f.write(chunk)
 
     logging.info('Download complete: {}'.format(target_filepath))
+    return response
 
 
 def read_id_list(filepath):
