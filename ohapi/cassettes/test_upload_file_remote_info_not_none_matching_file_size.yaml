@@ -7,7 +7,7 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.9.1]
     method: GET
-    uri: https://stackoverflow.com/questions/33184342/how-do-i-mock-an-open-write-without-getting-a-no-such-file-or-directory
+    uri: https://valid_url/
   response:
     body:
       string: some stuff
