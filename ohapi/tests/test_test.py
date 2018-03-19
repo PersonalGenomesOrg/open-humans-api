@@ -2,7 +2,6 @@ from unittest import TestCase
 
 import arrow
 import os
-import pytest
 import vcr
 
 from ohapi.utils_fs import (guess_tags, load_metadata_csv,
@@ -127,8 +126,7 @@ class UtilsTest(TestCase):
     @my_vcr.use_cassette()
     def test_download_file_valid_url(self):
         FILEPATH = 'ohapi/tests/data/test_download_dir/test_download_file'
-        DOWNLOAD_URL = 'https://www.openhumans.org/data-management/'
-                       'datafile-download/13627/'
+        DOWNLOAD_URL = 'https://www.openhumans.org/data-management/datafile-download/13627/'
         response = download_file(
             download_url=DOWNLOAD_URL, target_filepath=FILEPATH)
         self.assertEqual(response.status_code, 200)
