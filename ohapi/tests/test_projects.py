@@ -1,7 +1,5 @@
 from unittest import TestCase
 from ohapi.projects import OHProject
-
-import pytest
 import vcr
 
 parameter_defaults = {
@@ -74,9 +72,6 @@ class ProjectsTestUpdateData(TestCase):
     def test_update_data_expired_master_access_token(self):
         self.assertRaises(Exception, OHProject, MASTER_ACCESS_TOKEN_EXPIRED)
 
-
     @my_vcr.use_cassette
     def test_update_data_invalid_master_access_token(self):
         self.assertRaises(Exception, OHProject, MASTER_ACCESS_TOKEN_INVALID)
-        # response = ohproject.update_data()
-        # assert response.json() == {"detail": "Invalid token."}
