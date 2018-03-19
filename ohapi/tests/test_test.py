@@ -126,7 +126,7 @@ class UtilsTest(TestCase):
     @my_vcr.use_cassette()
     def test_download_file_valid_url(self):
         FILEPATH = 'ohapi/tests/data/test_download_dir/test_download_file'
-        DOWNLOAD_URL = 'https://www.openhumans.org/data-management/datafile-download/13627/'
+        DOWNLOAD_URL = 'http://www.loremipsum.de/downloads/version1.txt'
         response = download_file(
             download_url=DOWNLOAD_URL, target_filepath=FILEPATH)
         self.assertEqual(response.status_code, 200)
