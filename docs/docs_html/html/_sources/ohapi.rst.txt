@@ -1,13 +1,6 @@
 ohapi package
 =============
 
-Subpackages
------------
-
-.. toctree::
-
-    ohapi.cassettes
-
 Submodules
 ----------
 

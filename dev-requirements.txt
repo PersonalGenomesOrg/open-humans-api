@@ -5,3 +5,4 @@ flake8
 arrow
 humanfriendly
 requests
+sphinx

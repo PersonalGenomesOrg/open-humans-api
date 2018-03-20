@@ -6,7 +6,7 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = open-humans-api
 SOURCEDIR     = .
-BUILDDIR      = _build
+BUILDDIR      = docs_html#_build
 
 # Put it first so that "make" without argument is like "make help".
 help:

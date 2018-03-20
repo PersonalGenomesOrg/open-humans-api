@@ -1,0 +1,411 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ohapi package &#8212; open-humans-api  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ohapi-package">
+<h1>ohapi package<a class="headerlink" href="#ohapi-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ohapi.api">
+<span id="ohapi-api-module"></span><h2>ohapi.api module<a class="headerlink" href="#module-ohapi.api" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="ohapi.api.SettingsError">
+<em class="property">exception </em><code class="descclassname">ohapi.api.</code><code class="descname">SettingsError</code><a class="headerlink" href="#ohapi.api.SettingsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.api.delete_file">
+<code class="descclassname">ohapi.api.</code><code class="descname">delete_file</code><span class="sig-paren">(</span><em>access_token</em>, <em>project_member_id</em>, <em>base_url='https://www.openhumans.org/'</em>, <em>file_basename=None</em>, <em>file_id=None</em>, <em>all_files=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.api.delete_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete project member files by file_basename, file_id, or all_files.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.api.delete_files">
+<code class="descclassname">ohapi.api.</code><code class="descname">delete_files</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.api.delete_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ohapi.api.exchange_oauth2_member">
+<code class="descclassname">ohapi.api.</code><code class="descname">exchange_oauth2_member</code><span class="sig-paren">(</span><em>access_token</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.api.exchange_oauth2_member" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ohapi.api.get_all_results">
+<code class="descclassname">ohapi.api.</code><code class="descname">get_all_results</code><span class="sig-paren">(</span><em>starting_page</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.api.get_all_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given starting API query for Open Humans, iterate to get all results.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.api.get_page">
+<code class="descclassname">ohapi.api.</code><code class="descname">get_page</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.api.get_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a single page of results.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.api.message">
+<code class="descclassname">ohapi.api.</code><code class="descname">message</code><span class="sig-paren">(</span><em>subject</em>, <em>message</em>, <em>access_token</em>, <em>all_members=False</em>, <em>project_member_ids=None</em>, <em>base_url='https://www.openhumans.org/'</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.api.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>send messages.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.api.oauth2_auth_url">
+<code class="descclassname">ohapi.api.</code><code class="descname">oauth2_auth_url</code><span class="sig-paren">(</span><em>redirect_uri=None</em>, <em>client_id=None</em>, <em>base_url='https://www.openhumans.org/'</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.api.oauth2_auth_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an OAuth2 authorization URL for a project, given Client ID. This
+function constructs an authorization URL for a user to follow.
+The user will be redirected to Authorize Open Humans data for our external
+application. An OAuth2 project on Open Humans is required for this to
+properly work. To learn more about Open Humans OAuth2 projects, go to:
+<a class="reference external" href="https://www.openhumans.org/direct-sharing/oauth2-features/">https://www.openhumans.org/direct-sharing/oauth2-features/</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>redirect_uri</strong> – This field is set to <cite>None</cite> by default. However, if</td>
+</tr>
+</tbody>
+</table>
+<p>provided, it appends it in the URL returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>client_id</strong> – This field is also set to <cite>None</cite> by default however,</td>
+</tr>
+</tbody>
+</table>
+<p>is a mandatory field for the final URL to work. It uniquely identifies a
+given OAuth2 project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>base_url</strong> – It is this URL <cite>https://www.openhumans.org</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.api.oauth2_token_exchange">
+<code class="descclassname">ohapi.api.</code><code class="descname">oauth2_token_exchange</code><span class="sig-paren">(</span><em>client_id</em>, <em>client_secret</em>, <em>redirect_uri</em>, <em>base_url='https://www.openhumans.org/'</em>, <em>code=None</em>, <em>refresh_token=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.api.oauth2_token_exchange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exchange code or refresh token for a new token and refresh token.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.api.upload_file">
+<code class="descclassname">ohapi.api.</code><code class="descname">upload_file</code><span class="sig-paren">(</span><em>target_filepath</em>, <em>metadata</em>, <em>access_token</em>, <em>base_url='https://www.openhumans.org/'</em>, <em>remote_file_info=None</em>, <em>project_member_id=None</em>, <em>max_bytes=128000000</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.api.upload_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload a file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ohapi.command_line">
+<span id="ohapi-command-line-module"></span><h2>ohapi.command_line module<a class="headerlink" href="#module-ohapi.command_line" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ohapi.command_line.download">
+<code class="descclassname">ohapi.command_line.</code><code class="descname">download</code><span class="sig-paren">(</span><em>directory</em>, <em>master_token=None</em>, <em>member=None</em>, <em>access_token=None</em>, <em>source=None</em>, <em>project_data=False</em>, <em>max_size='128m'</em>, <em>verbose=False</em>, <em>debug=False</em>, <em>memberlist=None</em>, <em>excludelist=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.command_line.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download data from project members to the target directory.</p>
+<p>Unless this is a member-specific download, directories will be
+created for each project member ID. Also, unless a source is specified,
+all shared sources are downloaded and data is sorted into subdirectories
+according to source.</p>
+<p>Projects can optionally return data to Open Humans member accounts.
+If project_data is True (or the “–project-data” flag is used), this data
+(the project’s own data files, instead of data from other sources) will be
+downloaded for each member.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.command_line.download_metadata">
+<code class="descclassname">ohapi.command_line.</code><code class="descname">download_metadata</code><span class="sig-paren">(</span><em>master_token</em>, <em>output_csv</em>, <em>verbose=False</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.command_line.download_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output CSV with metadata for a project’s downloadable files in Open Humans.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.command_line.set_log_level">
+<code class="descclassname">ohapi.command_line.</code><code class="descname">set_log_level</code><span class="sig-paren">(</span><em>debug</em>, <em>verbose</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.command_line.set_log_level" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ohapi.command_line.upload">
+<code class="descclassname">ohapi.command_line.</code><code class="descname">upload</code><span class="sig-paren">(</span><em>directory</em>, <em>metadata_csv</em>, <em>master_token=None</em>, <em>member=None</em>, <em>access_token=None</em>, <em>safe=False</em>, <em>sync=False</em>, <em>max_size='128m'</em>, <em>mode='default'</em>, <em>verbose=False</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.command_line.upload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload files for the project to Open Humans member accounts.</p>
+<p>If using a master access token and not specifying member ID:</p>
+<p>(1) Files should be organized in subdirectories according to project
+member ID, e.g.:</p>
+<dl class="docutils">
+<dt></dt>
+<dd>main_directory/01234567/data.json
+main_directory/12345678/data.json
+main_directory/23456789/data.json</dd>
+</dl>
+<ol class="arabic simple" start="2">
+<li>The metadata CSV should have the following format:</li>
+</ol>
+<dl class="docutils">
+<dt></dt>
+<dd>1st column: Project member ID
+2nd column: filenames
+3rd &amp; additional columns: Metadata fields (see below)</dd>
+</dl>
+<p>
+If uploading for a specific member:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>The local directory should not contain subdirectories.</li>
+<li>The metadata CSV should have the following format:
+1st column: filenames
+2nd &amp; additional columns: Metadata fields (see below)</li>
+</ol>
+</div></blockquote>
+<p>The default behavior is to overwrite files with matching filenames on
+Open Humans, but not otherwise delete files. (Use –safe or –sync to
+change this behavior.)</p>
+<p>
+If included, the following metadata columns should be correctly formatted:</p>
+<blockquote>
+<div>‘tags’: should be comma-separated strings
+‘md5’: should match the file’s md5 hexdigest
+‘creation_date’, ‘start_date’, ‘end_date’: ISO 8601 dates or datetimes</div></blockquote>
+<p>Other metedata fields (e.g. ‘description’) can be arbitrary strings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.command_line.upload_metadata">
+<code class="descclassname">ohapi.command_line.</code><code class="descname">upload_metadata</code><span class="sig-paren">(</span><em>directory</em>, <em>create_csv=''</em>, <em>create_json=''</em>, <em>review=''</em>, <em>max_size='128m'</em>, <em>verbose=False</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.command_line.upload_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draft or review metadata files for uploading files to Open Humans.</p>
+<p>The target directory should either represent files for a single member (no
+subdirectories), or contain a subdirectory for each project member ID.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ohapi.projects">
+<span id="ohapi-projects-module"></span><h2>ohapi.projects module<a class="headerlink" href="#module-ohapi.projects" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ohapi.projects.OHProject">
+<em class="property">class </em><code class="descclassname">ohapi.projects.</code><code class="descname">OHProject</code><span class="sig-paren">(</span><em>master_access_token</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.projects.OHProject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Work with an Open Humans Project.</p>
+<dl class="method">
+<dt id="ohapi.projects.OHProject.download_all">
+<code class="descname">download_all</code><span class="sig-paren">(</span><em>target_dir</em>, <em>source=None</em>, <em>project_data=False</em>, <em>memberlist=None</em>, <em>excludelist=None</em>, <em>max_size='128m'</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.projects.OHProject.download_all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="ohapi.projects.OHProject.download_member_project_data">
+<em class="property">classmethod </em><code class="descname">download_member_project_data</code><span class="sig-paren">(</span><em>member_data</em>, <em>target_member_dir</em>, <em>max_size='128m'</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.projects.OHProject.download_member_project_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download files to sync a local dir to match OH member project data.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="ohapi.projects.OHProject.download_member_shared">
+<em class="property">classmethod </em><code class="descname">download_member_shared</code><span class="sig-paren">(</span><em>member_data</em>, <em>target_member_dir</em>, <em>source=None</em>, <em>max_size='128m'</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.projects.OHProject.download_member_shared" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download files to sync a local dir to match OH member shared data.</p>
+<p>Files are downloaded to match their “basename” on Open Humans.
+If there are multiple files with the same name, the most recent is
+downloaded.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ohapi.projects.OHProject.update_data">
+<code class="descname">update_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.projects.OHProject.update_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="ohapi.projects.OHProject.upload_member_from_dir">
+<em class="property">static </em><code class="descname">upload_member_from_dir</code><span class="sig-paren">(</span><em>target_member_dir</em>, <em>metadata</em>, <em>access_token</em>, <em>mode='default'</em>, <em>max_size='128m'</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.projects.OHProject.upload_member_from_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload files in target directory to an Open Humans member’s account.</p>
+<p>The default behavior is to overwrite files with matching filenames on
+Open Humans, but not otherwise delete files.</p>
+<p>If the ‘mode’ parameter is ‘safe’: matching filenames will not be
+overwritten.</p>
+<p>If the ‘mode’ parameter is ‘sync’: files on Open Humans that are not
+in the local directory will be deleted.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ohapi.public">
+<span id="ohapi-public-module"></span><h2>ohapi.public module<a class="headerlink" href="#module-ohapi.public" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ohapi.public.download">
+<code class="descclassname">ohapi.public.</code><code class="descname">download</code><span class="sig-paren">(</span><em>source=None</em>, <em>username=None</em>, <em>directory='.'</em>, <em>max_size='128m'</em>, <em>quiet=None</em>, <em>debug=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.public.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download public data from Open Humans.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.public.download_url">
+<code class="descclassname">ohapi.public.</code><code class="descname">download_url</code><span class="sig-paren">(</span><em>result</em>, <em>directory</em>, <em>max_bytes</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.public.download_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.public.signal_handler_cb">
+<code class="descclassname">ohapi.public.</code><code class="descname">signal_handler_cb</code><span class="sig-paren">(</span><em>signal_name</em>, <em>frame</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.public.signal_handler_cb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exit on Ctrl-C.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ohapi.utils_fs">
+<span id="ohapi-utils-fs-module"></span><h2>ohapi.utils_fs module<a class="headerlink" href="#module-ohapi.utils_fs" title="Permalink to this headline">¶</a></h2>
+<p>Utility functions to sync and work with Open Humans data in a local filesystem.</p>
+<dl class="function">
+<dt id="ohapi.utils_fs.characterize_local_files">
+<code class="descclassname">ohapi.utils_fs.</code><code class="descname">characterize_local_files</code><span class="sig-paren">(</span><em>filedir</em>, <em>max_bytes=128000000</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.utils_fs.characterize_local_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collate local file info as preperation for Open Humans upload.</p>
+<p>Note: Files with filesize &gt; max_bytes are not included in returned info.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.utils_fs.download_file">
+<code class="descclassname">ohapi.utils_fs.</code><code class="descname">download_file</code><span class="sig-paren">(</span><em>download_url</em>, <em>target_filepath</em>, <em>max_bytes=128000000</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.utils_fs.download_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.utils_fs.guess_tags">
+<code class="descclassname">ohapi.utils_fs.</code><code class="descname">guess_tags</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.utils_fs.guess_tags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ohapi.utils_fs.load_metadata_csv">
+<code class="descclassname">ohapi.utils_fs.</code><code class="descname">load_metadata_csv</code><span class="sig-paren">(</span><em>input_filepath</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.utils_fs.load_metadata_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return dict of metadata.</p>
+<p>Format is either dict (filenames are keys) or dict-of-dicts (project member
+IDs as top level keys, then filenames as keys).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.utils_fs.load_metadata_csv_multi_user">
+<code class="descclassname">ohapi.utils_fs.</code><code class="descname">load_metadata_csv_multi_user</code><span class="sig-paren">(</span><em>csv_in</em>, <em>header</em>, <em>tags_idx</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.utils_fs.load_metadata_csv_multi_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the metadata as requested for a single user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.utils_fs.load_metadata_csv_single_user">
+<code class="descclassname">ohapi.utils_fs.</code><code class="descname">load_metadata_csv_single_user</code><span class="sig-paren">(</span><em>csv_in</em>, <em>header</em>, <em>tags_idx</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.utils_fs.load_metadata_csv_single_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the metadata as requested for a single user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ohapi.utils_fs.mk_metadata_csv">
+<code class="descclassname">ohapi.utils_fs.</code><code class="descname">mk_metadata_csv</code><span class="sig-paren">(</span><em>filedir</em>, <em>outputfilepath</em>, <em>max_bytes=128000000</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.utils_fs.mk_metadata_csv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ohapi.utils_fs.read_id_list">
+<code class="descclassname">ohapi.utils_fs.</code><code class="descname">read_id_list</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.utils_fs.read_id_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ohapi.utils_fs.strip_zip_suffix">
+<code class="descclassname">ohapi.utils_fs.</code><code class="descname">strip_zip_suffix</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.utils_fs.strip_zip_suffix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ohapi.utils_fs.validate_metadata">
+<code class="descclassname">ohapi.utils_fs.</code><code class="descname">validate_metadata</code><span class="sig-paren">(</span><em>target_dir</em>, <em>metadata</em><span class="sig-paren">)</span><a class="headerlink" href="#ohapi.utils_fs.validate_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that the files listed in metadata exactly match files in target dir.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ohapi">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ohapi" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ohapi package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ohapi.api">ohapi.api module</a></li>
+<li><a class="reference internal" href="#module-ohapi.command_line">ohapi.command_line module</a></li>
+<li><a class="reference internal" href="#module-ohapi.projects">ohapi.projects module</a></li>
+<li><a class="reference internal" href="#module-ohapi.public">ohapi.public module</a></li>
+<li><a class="reference internal" href="#module-ohapi.utils_fs">ohapi.utils_fs module</a></li>
+<li><a class="reference internal" href="#module-ohapi">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ohapi.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Open Humans.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/ohapi.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
