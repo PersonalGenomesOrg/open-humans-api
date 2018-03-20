@@ -6,7 +6,7 @@ import vcr
 
 from ohapi.utils_fs import (guess_tags, load_metadata_csv,
                             validate_metadata, characterize_local_files,
-                            read_id_list, download_file)
+                            read_id_list, download_file, mk_metadata_csv)
 from humanfriendly import parse_size
 
 MAX_FILE_DEFAULT = parse_size('128m')
@@ -130,3 +130,18 @@ class UtilsTest(TestCase):
         response = download_file(
             download_url=DOWNLOAD_URL, target_filepath=FILEPATH)
         self.assertEqual(response.status_code, 200)
+
+    def test_mk_metadata_csv(self):
+        FILEDIR = 'ohapi/tests/data/test_directory'
+        OUTPUTPATH = 'ohapi/tests/data/test_output_dir/test_output_file.csv'
+        TESTFILEPATH = 'ohapi/tests/data/test_file.csv'
+        mk_metadata_csv(
+            filedir=FILEDIR, outputfilepath=OUTPUTPATH,
+            max_bytes=MAX_FILE_DEFAULT)
+        f1 = open(OUTPUTPATH, 'r')
+        f2 = open(TESTFILEPATH, 'r')
+        f1_line = f1.readline()
+        f2_line = f2.readline()
+        self.assertEqual(f1_line, f2_line)
+        f1.close()
+        f2.close()
