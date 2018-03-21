@@ -65,7 +65,7 @@ def oauth2_token_exchange(client_id, client_secret, redirect_uri,
     req = requests.post(
         token_url, data=data,
         auth=requests.auth.HTTPBasicAuth(client_id, client_secret))
-    handle_error(req)
+    handle_error(req, 200)
     data = req.json()
     return data
 
@@ -75,7 +75,7 @@ def get_page(url):
     Get a single page of results.
     """
     response = requests.get(url)
-    handle_error(response)
+    handle_error(response, 200)
     data = response.json()
     return data
 
@@ -139,7 +139,7 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
     r = requests.post(url, files={'data_file': open(target_filepath, 'rb')},
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
-    handle_error(r)
+    handle_error(r, 201)
     return r
     logging.info('Upload complete: {}'.format(target_filepath))
 
@@ -164,7 +164,7 @@ def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
             "One (and only one) of the following must be specified: "
             "file_basename, file_id, or all_files is set to True.")
     response = requests.post(url, data=data)
-    handle_error(response)
+    handle_error(response, 200)
     return response
 
 
@@ -184,7 +184,7 @@ def message(subject, message, access_token, all_members=False,
     if not(all_members) and not(project_member_ids):
         response = requests.post(url, data={'subject': subject,
                                             'message': message})
-        handle_error(response)
+        handle_error(response, 200)
         return response
     elif all_members and project_member_ids:
         raise ValueError(
@@ -195,20 +195,17 @@ def message(subject, message, access_token, all_members=False,
                                      'project_member_ids': project_member_ids,
                                      'subject': subject,
                                      'message': message})
-        handle_error(r)
+        handle_error(r, 200)
         return r
 
 
-def handle_error(r):
+def handle_error(r, expected_code):
     code = r.status_code
-    if code in [200, 201, 202, 204]:
-        return
-    else:
+    if code != expected_code:
         info = 'API response status code {}'.format(code)
         if 'detail' in r.json():
             info = info + ": {}".format(r.json()['detail'])
         raise Exception(info)
-        return
 
 
 def process_info(remote_file_info, filesize, target_filepath):
@@ -217,6 +214,5 @@ def process_info(remote_file_info, filesize, target_filepath):
     if remote_size == filesize:
         logging.info('Skipping {}, remote exists with matching name and '
                      'file size'.format(target_filepath))
-        raise ValueError("Remote exist with matching name and file size")
         return False
     return True
