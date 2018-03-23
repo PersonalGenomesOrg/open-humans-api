@@ -8,10 +8,11 @@ from click import UsageError
 from humanfriendly import parse_size
 
 from .projects import OHProject
-from .api import exchange_oauth2_member
+from .api import exchange_oauth2_member, oauth2_auth_url
 from .utils_fs import load_metadata_csv, mk_metadata_csv, read_id_list
 
 MAX_FILE_DEFAULT = parse_size('128m')
+OH_BASE_URL = 'https://www.openhumans.org/'
 
 
 def set_log_level(debug, verbose):
@@ -301,3 +302,16 @@ def upload(directory, metadata_csv, master_token=None, member=None,
                 mode=mode,
                 access_token=access_token,
             )
+
+
+@click.command()
+@click.option('-r', '--redirect_uri',
+              help='Redirect URL for project')
+@click.option('-c', '--client_id',
+              help='Client ID for project', required=True)
+@click.option('--base_url', help='Base URL', default=OH_BASE_URL)
+def oauth2_auth_url_cli(redirect_uri=None, client_id=None,
+                        base_url=OH_BASE_URL):
+    result = oauth2_auth_url(redirect_uri, client_id, base_url)
+    print('The requested URL is : \r')
+    print(result)
