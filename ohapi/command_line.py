@@ -313,14 +313,16 @@ def upload(directory, metadata_csv, master_token=None, member=None,
 @click.option('-at', '--access_token', help='access token', required=True)
 @click.option('--all_members', help='all members',
               default=False, show_default=True)
-@click.option('--project_member_ids', help='show project_member_id',
+@click.option('--project_member_ids',
+              help='list of comma-separated project_member_ids. ' +
+              'Example argument: "ID1, ID2"',
               default=None, show_default=True)
 @click.option('-v', '--verbose', help='Show INFO level logging', is_flag=True)
 @click.option('--debug', help='Show DEBUG level logging.', is_flag=True)
 def message_cli(subject, message_body, access_token, all_members=False,
                 project_member_ids=None, base_url=OH_BASE_URL,
                 verbose=False, debug=False):
-    if(project_member_ids):
+    if project_member_ids:
         project_member_ids = re.split(r'[ ,\r\n]+', project_member_ids)
     return message(subject, message_body, access_token, all_members,
                    project_member_ids, base_url)
