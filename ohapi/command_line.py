@@ -8,7 +8,7 @@ from click import UsageError
 from humanfriendly import parse_size
 
 from .projects import OHProject
-from .api import exchange_oauth2_member
+from .api import OH_BASE_URL, exchange_oauth2_member, oauth2_token_exchange
 from .utils_fs import load_metadata_csv, mk_metadata_csv, read_id_list
 
 MAX_FILE_DEFAULT = parse_size('128m')
@@ -301,3 +301,23 @@ def upload(directory, metadata_csv, master_token=None, member=None,
                 mode=mode,
                 access_token=access_token,
             )
+
+
+@click.command()
+@click.option('-cid', '--client_id',
+              help='client id of user.', required=True)
+@click.option('-cs', '--client_secret',
+              help='client secret of user.', required=True)
+@click.option('-re_uri', '--redirect_uri',
+              help='redirect_uri of user', required=True)
+@click.option('--base_url', help='base url of Open Humans',
+              default=OH_BASE_URL, show_default=True)
+@click.option('--code', help='code of user',
+              default=None, show_default=True)
+@click.option('-rt', '--refresh_token', help='refresh token of user',
+              default=None, show_default=True)
+def oauth_token_exchange_cli(client_id, client_secret, redirect_uri,
+                             base_url=OH_BASE_URL, code=None,
+                             refresh_token=None):
+    print (oauth2_token_exchange(client_id, client_secret, redirect_uri,
+                                 base_url, code, refresh_token))
