@@ -319,5 +319,5 @@ def upload(directory, metadata_csv, master_token=None, member=None,
 def oauth_token_exchange_cli(client_id, client_secret, redirect_uri,
                              base_url=OH_BASE_URL, code=None,
                              refresh_token=None):
-    print (oauth2_token_exchange(client_id, client_secret, redirect_uri,
+    print(oauth2_token_exchange(client_id, client_secret, redirect_uri,
                                  base_url, code, refresh_token))
