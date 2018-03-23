@@ -31,8 +31,8 @@ def oauth2_auth_url(redirect_uri=None, client_id=None, base_url=OH_BASE_URL):
     :param redirect_uri: This field is set to `None` by default. However, if
         provided, it appends it in the URL returned.
     :param client_id: This field is also set to `None` by default however,
-        is a mandatory field for the final URL to work. It uniquely identifies a
-        given OAuth2 project.
+        is a mandatory field for the final URL to work. It uniquely identifies
+        a given OAuth2 project.
     :param base_url: It is this URL `https://www.openhumans.org`
     """
     if not client_id:
