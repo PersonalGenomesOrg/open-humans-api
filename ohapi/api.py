@@ -140,8 +140,8 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
                       data={'project_member_id': project_member_id,
                             'metadata': json.dumps(metadata)})
     handle_error(r, 201)
-    return r
     logging.info('Upload complete: {}'.format(target_filepath))
+    return r
 
 
 def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
