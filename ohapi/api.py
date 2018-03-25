@@ -33,7 +33,7 @@ def oauth2_auth_url(redirect_uri=None, client_id=None, base_url=OH_BASE_URL):
     :param client_id: This field is also set to `None` by default however,
         is a mandatory field for the final URL to work. It uniquely identifies
         a given OAuth2 project.
-    :param base_url: It is this URL `https://www.openhumans.org`
+    :param base_url: It is this URL `https://www.openhumans.org`.
     """
     if not client_id:
         client_id = os.getenv('OHAPI_CLIENT_ID')
@@ -59,6 +59,15 @@ def oauth2_token_exchange(client_id, client_secret, redirect_uri,
                           base_url=OH_BASE_URL, code=None, refresh_token=None):
     """
     Exchange code or refresh token for a new token and refresh token.
+
+    :param client_id: This field is the client id of user.
+    :param client_secret: This field is the client secret of user.
+    :param redirect_uri: This is the user redirect uri.
+    :param base_url: It is this URL `https://www.openhumans.org`
+    :param code: This field is used to obtain access_token for the first time.
+        It's default value is none.
+    :param refresh_token: This field is used to obtain a new access_token when
+        the token expires.
     """
     if not (code or refresh_token) or (code and refresh_token):
         raise ValueError("Either code or refresh_token must be specified.")
@@ -84,6 +93,8 @@ def oauth2_token_exchange(client_id, client_secret, redirect_uri,
 def get_page(url):
     """
     Get a single page of results.
+
+    :param url: This field is the url from which data will be requested.
     """
     response = requests.get(url)
     if not response.status_code == 200:
@@ -98,6 +109,9 @@ def get_page(url):
 def get_all_results(starting_page):
     """
     Given starting API query for Open Humans, iterate to get all results.
+
+    :param starting page: This field is the first page, starting from which
+        results will be obtained.
     """
     logging.info('Retrieving all results for {}'.format(starting_page))
     page = starting_page
@@ -118,6 +132,12 @@ def get_all_results(starting_page):
 
 
 def exchange_oauth2_member(access_token, base_url=OH_BASE_URL):
+    """
+    Returns data for a specific user, including shared data files.
+
+    :param access_token: This field is the user specific access_token.
+    :param base_url: It is this URL `https://www.openhumans.org`.
+    """
     url = urlparse.urljoin(
         base_url,
         '/api/direct-sharing/project/exchange-member/?{}'.format(
@@ -131,7 +151,21 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
                 remote_file_info=None, project_member_id=None,
                 max_bytes=MAX_FILE_DEFAULT):
     """
-    Upload a file.
+    Upload a file.To learn more about Open Humans OAuth2 projects, go to:
+    https://www.openhumans.org/direct-sharing/oauth2-features/.
+
+    :param target_filepath: This field is the filepath of the file to be
+        uploaded
+    :param metadata: This field is the metadata associated with the file.
+        Description and tags are compulsory fields of metadata.
+    :param access_token: This is user specific access token/master token.
+    :param base_url: It is this URL `https://www.openhumans.org`.
+    :param remote_file_info: This field is for for checking if a file with
+        matching name and file size already exists. Its default value is none.
+    :param project_member_id: This field is the list of project member id of
+        all members of a project. Its default value is None.
+    :param max_bytes: This field is the maximum file size a user can upload.
+        It's default value is 128m.
     """
     filesize = os.stat(target_filepath).st_size
     if filesize > max_bytes:
@@ -168,7 +202,19 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
 def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
                 file_basename=None, file_id=None, all_files=False):
     """
-    Delete project member files by file_basename, file_id, or all_files.
+    Delete project member files by file_basename, file_id, or all_files. To
+        learn more about Open Humans OAuth2 projects, go to:
+        https://www.openhumans.org/direct-sharing/oauth2-features/.
+
+    :param access_token: This field is user specific access_token.
+    :param project_member_id: This field is the project member id of user.
+    :param base_url: It is this URL `https://www.openhumans.org`.
+    :param file_basename: This field is the name of the file to delete for the
+        particular user for the particular project.
+    :param file_id: This field is the id of the file to delete for the
+        particular user for the particular project.
+    :param all_files: This is a boolean field to delete all files for the
+        particular user for the particular project.
     """
     url = urlparse.urljoin(
         base_url, '/api/direct-sharing/project/files/delete/?{}'.format(
@@ -190,13 +236,26 @@ def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
 
 # Alternate names for the same functions.
 def delete_files(*args, **kwargs):
+    """
+    Alternate name for the function delete_file
+    """
     return delete_file(*args, **kwargs)
 
 
 def message(subject, message, access_token, all_members=False,
             project_member_ids=None, base_url=OH_BASE_URL):
     """
-    send messages.
+    Send an email to individual users or in bulk. To learn more about Open
+    Humans OAuth2 projects, go to:
+    https://www.openhumans.org/direct-sharing/oauth2-features/
+
+    :param subject: This field is the subject of the email.
+    :param message: This field is the body of the email.
+    :param access_token: This is user specific access token/master token.
+    :param all_members: This is a boolean field to send email to all members of
+        the project.
+    :param project_member_ids: This field is the list of project_member_id.
+    :param base_url: It is this URL `https://www.openhumans.org`.
     """
     url = urlparse.urljoin(
         base_url, '/api/direct-sharing/project/message/?{}'.format(
