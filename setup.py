@@ -15,7 +15,7 @@ install_requires = [
     'humanfriendly>=1.44.3',
     'requests>=2.9.1',
     'arrow>=0.8.0',
-    ]
+]
 if sys.version_info < (3, 2):
     install_requires.append('futures>=3.0.5')
 
@@ -60,6 +60,9 @@ setup(
             'ohproj-upload = ohapi.command_line:upload_cli',
             'ohproj-upload-metadata = ohapi.command_line:upload_metadata_cli',
             'ohproj-exchange-token = ohapi.command_line:oauth_token_exchange_cli'
+            'ohproj-oauth2-url = ohapi.command_line:oauth2_auth_url_cli',
+            'ohproj-message = ohapi.command_line:message_cli',
+            'ohproj-delete = ohapi.command_line:delete_cli',
         ]
     },
 

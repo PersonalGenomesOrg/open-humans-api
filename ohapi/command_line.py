@@ -4,11 +4,17 @@ import os
 import re
 
 import click
+
 from click import UsageError
+
 from humanfriendly import parse_size
+
+from .api import (OH_BASE_URL, exchange_oauth2_member, message,
+                  delete_file, oauth2_auth_url)
 
 from .projects import OHProject
 from .api import OH_BASE_URL, exchange_oauth2_member, oauth2_token_exchange
+
 from .utils_fs import load_metadata_csv, mk_metadata_csv, read_id_list
 
 MAX_FILE_DEFAULT = parse_size('128m')
@@ -228,10 +234,10 @@ def upload(directory, metadata_csv, master_token=None, member=None,
 
     \b
     If uploading for a specific member:
-        (1) The local directory should not contain subdirectories.
-        (2) The metadata CSV should have the following format:
-            1st column: filenames
-            2nd & additional columns: Metadata fields (see below)
+    (1) The local directory should not contain subdirectories.
+    (2) The metadata CSV should have the following format:
+    1st column: filenames
+    2nd & additional columns: Metadata fields (see below)
 
     The default behavior is to overwrite files with matching filenames on
     Open Humans, but not otherwise delete files. (Use --safe or --sync to
@@ -239,9 +245,9 @@ def upload(directory, metadata_csv, master_token=None, member=None,
 
     \b
     If included, the following metadata columns should be correctly formatted:
-        'tags': should be comma-separated strings
-        'md5': should match the file's md5 hexdigest
-        'creation_date', 'start_date', 'end_date': ISO 8601 dates or datetimes
+    'tags': should be comma-separated strings
+    'md5': should match the file's md5 hexdigest
+    'creation_date', 'start_date', 'end_date': ISO 8601 dates or datetimes
 
     Other metedata fields (e.g. 'description') can be arbitrary strings.
     """
@@ -321,3 +327,53 @@ def oauth_token_exchange_cli(client_id, client_secret, redirect_uri,
                              refresh_token=None):
     print(oauth2_token_exchange(client_id, client_secret, redirect_uri,
                                 base_url, code, refresh_token))
+
+@click.option('-r', '--redirect_uri',
+              help='Redirect URL for project')
+@click.option('-c', '--client_id',
+              help='Client ID for project', required=True)
+@click.option('--base_url', help='Base URL', default=OH_BASE_URL)
+def oauth2_auth_url_cli(redirect_uri=None, client_id=None,
+                        base_url=OH_BASE_URL):
+    result = oauth2_auth_url(redirect_uri, client_id, base_url)
+    print('The requested URL is : \r')
+    print(result)
+
+
+@click.command()
+@click.option('-s', '--subject', help='subject', required=True)
+@click.option('-m', '--message_body', help='compose message', required=True)
+@click.option('-at', '--access_token', help='access token', required=True)
+@click.option('--all_members', help='all members',
+              default=False, show_default=True)
+@click.option('--project_member_ids',
+              help='list of comma-separated project_member_ids. ' +
+              'Example argument: "ID1, ID2"',
+              default=None, show_default=True)
+@click.option('-v', '--verbose', help='Show INFO level logging', is_flag=True)
+@click.option('--debug', help='Show DEBUG level logging.', is_flag=True)
+def message_cli(subject, message_body, access_token, all_members=False,
+                project_member_ids=None, base_url=OH_BASE_URL,
+                verbose=False, debug=False):
+    if project_member_ids:
+        project_member_ids = re.split(r'[ ,\r\n]+', project_member_ids)
+    return message(subject, message_body, access_token, all_members,
+                   project_member_ids, base_url)
+
+
+@click.command()
+@click.option('-T', '--access_token', help='Access token', required=True)
+@click.option('-m', '--project_member_id', help='Project Member ID',
+              required=True)
+@click.option('-b', '--file_basename', help='File basename')
+@click.option('-i', '--file_id', help='File ID')
+@click.option('--all_files', help='Delete all files',
+              default=False, show_default=True)
+def delete_cli(access_token, project_member_id, base_url=OH_BASE_URL,
+               file_basename=None, file_id=None, all_files=False):
+    response = delete_file(access_token, project_member_id,
+                           base_url, file_basename, file_id, all_files)
+    if (response.status_code == 200):
+        print("File deleted successfully")
+    else:
+        print("Bad response while deleting file.")
