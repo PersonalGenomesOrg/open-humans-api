@@ -44,6 +44,13 @@ ohapi.utils\_fs module
     :undoc-members:
     :show-inheritance:
 
+ohapi.tests.test_test module
+-----------------------------
+
+.. automodule:: ohapi.tests.test_test
+    :exclude-members: parameter_defaults, setUp
+    :members:
+    :show-inheritance:
 
 Module contents
 ---------------
