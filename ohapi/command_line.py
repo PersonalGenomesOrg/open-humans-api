@@ -54,7 +54,8 @@ def download_cli(directory, master_token=None, member=None, access_token=None,
                  excludelist=None):
     """
     Command line function for downloading data from project members to the
-    target directory. For more information visit :func:`download<ohapi.command_line.download>`.
+    target directory. For more information visit
+    :func:`download<ohapi.command_line.download>`.
     """
     return download(directory, master_token, member, access_token, source,
                     project_data, max_size, verbose, debug, memberlist,
