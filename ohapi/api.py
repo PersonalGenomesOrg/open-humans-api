@@ -58,7 +58,11 @@ def oauth2_auth_url(redirect_uri=None, client_id=None, base_url=OH_BASE_URL):
 def oauth2_token_exchange(client_id, client_secret, redirect_uri,
                           base_url=OH_BASE_URL, code=None, refresh_token=None):
     """
-    Exchange code or refresh token for a new token and refresh token.
+    Exchange code or refresh token for a new token and refresh token. For the
+    first time when a project is created, code is required to generate refresh
+    token. Once the refresh token is obtained, it can be used later on for
+    obtaining new access token and refresh token. For more details visit:
+    https://www.openhumans.org/direct-sharing/oauth2-setup/#setup-oauth2-authorization
 
     :param client_id: This field is the client id of user.
     :param client_secret: This field is the client secret of user.
