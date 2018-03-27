@@ -86,9 +86,9 @@ def download(directory, master_token=None, member=None, access_token=None,
         default value is None.
     :param source: This field is the data source. It's default value is None.
     :param project_data: This field is data related to particular project. It's
-        default value is None.
+        default value is False.
     :param max_size: This field is the maximum file size. It's default value is
-        None.
+        128m.
     :param verbose: This boolean field is the logging level. It's default value
         is False.
     :param debug: This boolean field is the logging level. It's default value
