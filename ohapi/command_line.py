@@ -10,10 +10,10 @@ from click import UsageError
 from humanfriendly import parse_size
 
 from .api import (OH_BASE_URL, exchange_oauth2_member, message,
-                  delete_file, oauth2_auth_url)
+                  delete_file, oauth2_auth_url,
+                  oauth2_token_exchange)
 
 from .projects import OHProject
-from .api import OH_BASE_URL, exchange_oauth2_member, oauth2_token_exchange
 
 from .utils_fs import load_metadata_csv, mk_metadata_csv, read_id_list
 
