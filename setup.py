@@ -15,7 +15,7 @@ install_requires = [
     'humanfriendly>=1.44.3',
     'requests>=2.9.1',
     'arrow>=0.8.0',
-    ]
+]
 if sys.version_info < (3, 2):
     install_requires.append('futures>=3.0.5')
 
@@ -54,11 +54,14 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'ohpub-download = ohapi.public:download',
-            'ohproj-download = ohapi.command_line:download',
-            'ohproj-download-metadata = ohapi.command_line:download_metadata',
-            'ohproj-upload = ohapi.command_line:upload',
-            'ohproj-upload-metadata = ohapi.command_line:upload_metadata',
+            'ohpub-download = ohapi.public:download_cli',
+            'ohproj-download = ohapi.command_line:download_cli',
+            'ohproj-download-metadata = ohapi.command_line:download_metadata_cli',
+            'ohproj-upload = ohapi.command_line:upload_cli',
+            'ohproj-upload-metadata = ohapi.command_line:upload_metadata_cli',
+            'ohproj-oauth2-url = ohapi.command_line:oauth2_auth_url_cli',
+            'ohproj-message = ohapi.command_line:message_cli',
+            'ohproj-delete = ohapi.command_line:delete_cli',
         ]
     },
 

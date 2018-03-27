@@ -24,7 +24,19 @@ class SettingsError(Exception):
 
 def oauth2_auth_url(redirect_uri=None, client_id=None, base_url=OH_BASE_URL):
     """
-    Return an OAuth2 authorization URL for a project, given Client ID.
+    Returns an OAuth2 authorization URL for a project, given Client ID. This
+    function constructs an authorization URL for a user to follow.
+    The user will be redirected to Authorize Open Humans data for our external
+    application. An OAuth2 project on Open Humans is required for this to
+    properly work. To learn more about Open Humans OAuth2 projects, go to:
+    https://www.openhumans.org/direct-sharing/oauth2-features/
+
+    :param redirect_uri: This field is set to `None` by default. However, if
+        provided, it appends it in the URL returned.
+    :param client_id: This field is also set to `None` by default however,
+        is a mandatory field for the final URL to work. It uniquely identifies
+        a given OAuth2 project.
+    :param base_url: It is this URL `https://www.openhumans.org`
     """
     if not client_id:
         client_id = os.getenv('OHAPI_CLIENT_ID')
@@ -68,6 +80,7 @@ def oauth2_token_exchange(client_id, client_secret, redirect_uri,
     req = requests.post(
         token_url, data=data,
         auth=requests.auth.HTTPBasicAuth(client_id, client_secret))
+    handle_error(req, 200)
     data = req.json()
     return data
 
@@ -77,11 +90,7 @@ def get_page(url):
     Get a single page of results.
     """
     response = requests.get(url)
-    if not response.status_code == 200:
-        err_msg = 'API response status code {}'.format(response.status_code)
-        if 'detail' in response.json():
-            err_msg = err_msg + ": {}".format(response.json()['detail'])
-        raise Exception(err_msg)
+    handle_error(response, 200)
     data = response.json()
     return data
 
@@ -108,9 +117,11 @@ def get_all_results(starting_page):
     return results
 
 
-def exchange_oauth2_member(access_token):
-    url = ('https://www.openhumans.org/api/direct-sharing/project/'
-           'exchange-member/?access_token={}'.format(access_token))
+def exchange_oauth2_member(access_token, base_url=OH_BASE_URL):
+    url = urlparse.urljoin(
+        base_url,
+        '/api/direct-sharing/project/exchange-member/?{}'.format(
+            urlparse.urlencode({'access_token': access_token})))
     member_data = get_page(url)
     logging.debug('JSON data: {}'.format(member_data))
     return member_data
@@ -122,6 +133,7 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
     filesize = os.stat(target_filepath).st_size
     if exceeds_size(filesize, max_bytes, target_filepath) is True:
         return
+      
     if remote_file_info:
         if process_info(remote_file_info, filesize, target_filepath) is False:
             return
@@ -138,9 +150,11 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
                  data={'data_file': open(target_filepath, 'rb')})
     done = '{}?{}'.format(OH_UPLOAD_COMPLETE,
                           urlparse.urlencode({'access_token': access_token}))
-    requests.post(done, data={'project_member_id': project_member_id,
+    r1 = requests.post(done, data={'project_member_id': project_member_id,
                               'file_id': r.json()['id']})
+    handle_error(r1, 201)
     logging.info('Upload complete: {}'.format(target_filepath))
+    return r1
 
 
 def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
@@ -162,8 +176,9 @@ def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
         raise ValueError(
             "One (and only one) of the following must be specified: "
             "file_basename, file_id, or all_files is set to True.")
-    r = requests.post(url, data=data)
-    return r
+    response = requests.post(url, data=data)
+    handle_error(response, 200)
+    return response
 
 
 # Alternate names for the same functions.
@@ -180,18 +195,21 @@ def message(subject, message, access_token, all_members=False,
         base_url, '/api/direct-sharing/project/message/?{}'.format(
             urlparse.urlencode({'access_token': access_token})))
     if not(all_members) and not(project_member_ids):
-        return requests.post(url, data={'subject': subject,
-                                        'message': message})
+        response = requests.post(url, data={'subject': subject,
+                                            'message': message})
+        handle_error(response, 200)
+        return response
     elif all_members and project_member_ids:
         raise ValueError(
             "One (and only one) of the following must be specified: "
             "project_members_id or all_members is set to True.")
     else:
-        return requests.post(url, data={
-               'all_members': all_members,
-               'project_member_ids': project_member_ids,
-               'subject': subject,
-               'message': message})
+        r = requests.post(url, data={'all_members': all_members,
+                                     'project_member_ids': project_member_ids,
+                                     'subject': subject,
+                                     'message': message})
+        handle_error(r, 200)
+        return r
 
 
 def exceeds_size(filesize, max_bytes, target_filepath):
@@ -201,7 +219,6 @@ def exceeds_size(filesize, max_bytes, target_filepath):
         return True
     return False
 
-
 def process_info(remote_file_info, filesize, target_filepath):
     response = requests.get(remote_file_info['download_url'], stream=True)
     remote_size = int(response.headers['Content-Length'])
@@ -210,3 +227,11 @@ def process_info(remote_file_info, filesize, target_filepath):
                      'file size'.format(target_filepath))
         return False
     return True
+  
+def handle_error(r, expected_code):
+    code = r.status_code
+    if code != expected_code:
+        info = 'API response status code {}'.format(code)
+        if 'detail' in r.json():
+            info = info + ": {}".format(r.json()['detail'])
+        raise Exception(info)
