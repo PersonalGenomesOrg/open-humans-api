@@ -124,7 +124,8 @@ class OHProject:
         Download data for all users including shared data files.
 
         :param target_dir: This field is the target directory to download data.
-        :param source: This field is the data source. It's default value is None.
+        :param source: This field is the data source. It's default value is
+            None.
         :param project_data: This field is data related to particular project.
             It's default value is False.
         :param memberlist: This field is list of members whose data will be
