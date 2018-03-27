@@ -237,7 +237,7 @@ def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
 # Alternate names for the same functions.
 def delete_files(*args, **kwargs):
     """
-    Alternate name for the function delete_file
+    Alternate name for the :func:`delete_file<ohapi.api.delete_file>`.
     """
     return delete_file(*args, **kwargs)
 
@@ -299,6 +299,7 @@ def process_info(remote_file_info, filesize, target_filepath):
     """
     Helper function for checking if a file with matching name and file_size
     exists.
+
     :param remote_file_info: This field is for for checking if a file with
         matching name and file size already exists.
     :param filesize: This field is the size of file.
