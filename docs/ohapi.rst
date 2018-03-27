@@ -56,6 +56,9 @@ ohapi.public module
     :undoc-members:
     :show-inheritance:
 
+.. click:: ohapi.public:download_cli
+    :prog: download_cli
+
 ohapi.utils\_fs module
 ----------------------
 
