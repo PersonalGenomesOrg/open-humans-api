@@ -133,7 +133,7 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
     filesize = os.stat(target_filepath).st_size
     if exceeds_size(filesize, max_bytes, target_filepath) is True:
         return
-      
+
     if remote_file_info:
         if process_info(remote_file_info, filesize, target_filepath) is False:
             return
@@ -151,7 +151,7 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
     done = '{}?{}'.format(OH_UPLOAD_COMPLETE,
                           urlparse.urlencode({'access_token': access_token}))
     r1 = requests.post(done, data={'project_member_id': project_member_id,
-                              'file_id': r.json()['id']})
+                                   'file_id': r.json()['id']})
     handle_error(r1, 201)
     logging.info('Upload complete: {}'.format(target_filepath))
     return r1
@@ -219,6 +219,7 @@ def exceeds_size(filesize, max_bytes, target_filepath):
         return True
     return False
 
+
 def process_info(remote_file_info, filesize, target_filepath):
     response = requests.get(remote_file_info['download_url'], stream=True)
     remote_size = int(response.headers['Content-Length'])
@@ -227,7 +228,8 @@ def process_info(remote_file_info, filesize, target_filepath):
                      'file size'.format(target_filepath))
         return False
     return True
-  
+
+
 def handle_error(r, expected_code):
     code = r.status_code
     if code != expected_code:
