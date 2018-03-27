@@ -179,7 +179,7 @@ class OHProject:
         :param metadata: This field is metadata for files to be uploaded.
         :param access_token: This field is user specific access token.
         :param mode: This field takes three value default, sync, safe. It's
-        default value is 'default'.
+            default value is 'default'.
         :param max_size: This field is the maximum file size. It's default
             value is 128m.
         """
