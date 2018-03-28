@@ -131,30 +131,31 @@ def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
                 remote_file_info=None, project_member_id=None,
                 max_bytes=MAX_FILE_DEFAULT):
     filesize = os.stat(target_filepath).st_size
-    if exceeds_size(filesize, max_bytes, target_filepath) is True:
-        return
+    if filesize > max_bytes:
+        logging.info('Skipping {}, {} > {}'.format(
+            target_filepath, format_size(filesize), format_size(max_bytes)))
+        raise ValueError("Maximum file size exceeded")
 
     if remote_file_info:
         if process_info(remote_file_info, filesize, target_filepath) is False:
             return
-    url = '{}?{}'.format(OH_UPLOAD, urlparse.urlencode(
-        {'access_token': access_token}))
+
+    url = urlparse.urljoin(
+        base_url, '/api/direct-sharing/project/files/upload/?{}'.format(
+            urlparse.urlencode({'access_token': access_token})))
+
     logging.info('Uploading {} ({})'.format(
         target_filepath, format_size(filesize)))
+
     if not(project_member_id):
         response = exchange_oauth2_member(access_token)
         project_member_id = response['project_member_id']
-    r = requests.post(url, data={'project_member_id': project_member_id,
-                                 'metadata': json.dumps(metadata)})
-    requests.put(url=r.json()['url'],
-                 data={'data_file': open(target_filepath, 'rb')})
-    done = '{}?{}'.format(OH_UPLOAD_COMPLETE,
-                          urlparse.urlencode({'access_token': access_token}))
-    r1 = requests.post(done, data={'project_member_id': project_member_id,
-                                   'file_id': r.json()['id']})
-    handle_error(r1, 201)
+    r = requests.post(url, files={'data_file': open(target_filepath, 'rb')},
+                      data={'project_member_id': project_member_id,
+                            'metadata': json.dumps(metadata)})
+    handle_error(r, 201)
     logging.info('Upload complete: {}'.format(target_filepath))
-    return r1
+    return r
 
 
 def delete_file(access_token, project_member_id, base_url=OH_BASE_URL,
@@ -237,3 +238,30 @@ def handle_error(r, expected_code):
         if 'detail' in r.json():
             info = info + ": {}".format(r.json()['detail'])
         raise Exception(info)
+
+
+def upload_aws(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
+               remote_file_info=None, project_member_id=None,
+               max_bytes=MAX_FILE_DEFAULT):
+    if remote_file_info:
+        if process_info(remote_file_info, filesize, target_filepath) is False:
+            return
+
+    url = '{}?{}'.format(OH_UPLOAD, urlparse.urlencode(
+        {'access_token': access_token}))
+
+    if not(project_member_id):
+        response = exchange_oauth2_member(access_token)
+        project_member_id = response['project_member_id']
+
+    r = requests.post(url, data={'project_member_id': project_member_id,
+                                 'metadata': json.dumps(metadata)})
+    requests.put(url=r.json()['url'],
+                 data={'data_file': open(target_filepath, 'rb')})
+    done = '{}?{}'.format(OH_UPLOAD_COMPLETE,
+                          urlparse.urlencode({'access_token': access_token}))
+    r1 = requests.post(done, data={'project_member_id': project_member_id,
+                                   'file_id': r.json()['id']})
+    handle_error(r1, 201)
+    logging.info('Upload complete: {}'.format(target_filepath))
+    return r
