@@ -62,10 +62,10 @@ class ProjectsTest(TestCase):
 
 
 class ProjectsTestUpdateData(TestCase):
-        """
-        Tests for :func:`update_data<ohapi.projects._update_data>`
+    """
+    Tests for :func:`update_data<ohapi.projects._update_data>`
 
-        """
+    """
 
     def setUp(self):
         pass
