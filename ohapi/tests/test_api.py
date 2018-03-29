@@ -693,70 +693,37 @@ class APITestUpload(TestCase):
                                  'info_not_none_invalid_metadata_with_' +
                                  'desc.yaml') as cass:
             with self.assertRaises(Exception):
-                with patch('%s.open' % __name__, mock_open(), create=True):
-                    with patch('ohapi.api.open', mock_open(), create=True):
-                        try:
-                            filename = 'foo'
+                with patch('ohapi.api.open', mock_open(), create=True):
+                    upload_file(
+                        target_filepath='foo',
+                        metadata=FILE_METADATA_INVALID_WITH_DESC,
+                        access_token=ACCESS_TOKEN,
+                        project_member_id=VALID_PMI1,
+                        remote_file_info=REMOTE_FILE_INFO)
+                    self.assertEqual(cass.responses[0][
+                                     "status"]["code"], 200)
+                    self.assertEqual(
+                        cass.responses[1]["body"]["string"]
+                        .decode('utf-8'),
+                        '{"metadata":["\\"tags\\" is a required ' +
+                        'field of the metadata"]}')
 
-                            def fake_stat(arg):
-                                if arg == filename:
-                                    faked = list(orig_os_stat('/tmp'))
-                                    faked[stat.ST_SIZE] = len('some stuff')
-                                    return stat_result(faked)
-                                else:
-                                    return orig_os_stat(arg)
-                            orig_os_stat = os.stat
-                            os.stat = fake_stat
-                            with open('foo', 'w') as h:
-                                h.write('some stuff')
-                            upload_file(
-                                target_filepath='foo',
-                                metadata=FILE_METADATA_INVALID_WITH_DESC,
-                                access_token=ACCESS_TOKEN,
-                                project_member_id=VALID_PMI1,
-                                remote_file_info=REMOTE_FILE_INFO)
-                            self.assertEqual(cass.responses[0][
-                                             "status"]["code"], 200)
-                            self.assertEqual(
-                                cass.responses[1]["body"]["string"]
-                                .decode('utf-8'),
-                                '{"metadata":["\\"tags\\" is a required ' +
-                                'field of the metadata"]}')
-                        finally:
-                            os.stat = orig_os_stat
 
     def test_upload_file_remote_info_not_none_invalid_metadata(self):
         with my_vcr.use_cassette(
                 'ohapi/cassettes/test_upload_file_remote_in' +
                 'fo_not_none_invalid_metadata.yaml') as cass:
             with self.assertRaises(Exception):
-                with patch('%s.open' % __name__, mock_open(), create=True):
-                    with patch('ohapi.api.open', mock_open(), create=True):
-                        try:
-                            filename = 'foo'
-
-                            def fake_stat(arg):
-                                if arg == filename:
-                                    faked = list(orig_os_stat('/tmp'))
-                                    faked[stat.ST_SIZE] = len('some stuff')
-                                    return stat_result(faked)
-                                else:
-                                    return orig_os_stat(arg)
-                            orig_os_stat = os.stat
-                            os.stat = fake_stat
-                            with open('foo', 'w') as h:
-                                h.write('some stuff')
-                            upload_file(target_filepath='foo',
-                                        metadata=FILE_METADATA_INVALID,
-                                        access_token=ACCESS_TOKEN,
-                                        project_member_id=VALID_PMI1,
-                                        remote_file_info=REMOTE_FILE_INFO)
-                            self.assertEqual(cass.responses[0][
-                                             "status"]["code"], 200)
-                            self.assertEqual(
-                                cass.responses[1]["body"]["string"]
-                                .decode('utf-8'),
-                                '{"metadata":["\\"description\\" is a ' +
-                                'required field of the metadata"]}')
-                        finally:
-                            os.stat = orig_os_stat
+                with patch('ohapi.api.open', mock_open(), create=True):
+                    upload_file(target_filepath='foo',
+                                metadata=FILE_METADATA_INVALID,
+                                access_token=ACCESS_TOKEN,
+                                project_member_id=VALID_PMI1,
+                                remote_file_info=REMOTE_FILE_INFO)
+                    self.assertEqual(cass.responses[0][
+                                     "status"]["code"], 200)
+                    self.assertEqual(
+                        cass.responses[1]["body"]["string"]
+                        .decode('utf-8'),
+                        '{"metadata":["\\"description\\" is a ' +
+                        'required field of the metadata"]}')
