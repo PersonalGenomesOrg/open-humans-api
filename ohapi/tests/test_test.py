@@ -1,5 +1,5 @@
 from unittest import TestCase
-
+from unittest.mock import mock_open, patch
 import arrow
 import os
 import vcr
@@ -106,31 +106,6 @@ class UtilsTest(TestCase):
         metadata = {'file_1.json', 'file_2.json'}
         self.assertEqual(validate_metadata(directory, metadata), True)
 
-    def test_characterize_local_files(self):
-        """
-        Tests for :func:`characterize_local_files<ohapi.utils_fs.characterize_local_files>`
-
-        """
-        filename = 'file_1.json'
-        filedir = 'ohapi/tests/data/test_directory/'
-        response = characterize_local_files(
-            filedir, max_bytes=MAX_FILE_DEFAULT)
-        filepath = os.path.join(filedir, filename)
-        file_stats = os.stat(filepath)
-        CREATION_DATE = arrow.get(file_stats.st_ctime).isoformat()
-        self.assertEqual(response,
-                         {
-                             'file_2.json':
-                             {'md5': 'd41d8cd98f00b204e9800998ecf8427e',
-                              'creation_date': CREATION_DATE,
-                              'description': '',
-                              'tags': ['json']},
-                             'file_1.json':
-                             {'md5': 'd41d8cd98f00b204e9800998ecf8427e',
-                                 'creation_date': CREATION_DATE,
-                                 'description': '',
-                                 'tags': ['json']}})
-
     def test_read_id_list_filepath_not_given(self):
         """
         Tests for :func:`read_id_list<ohapi.utils_fs.read_id_list>`
@@ -156,8 +131,9 @@ class UtilsTest(TestCase):
         Tests for :func:`download_file<ohapi.utils_fs.download_file>`
 
         """
-        FILEPATH = 'ohapi/tests/data/test_download_dir/test_download_file'
-        DOWNLOAD_URL = 'http://www.loremipsum.de/downloads/version1.txt'
-        response = download_file(
-            download_url=DOWNLOAD_URL, target_filepath=FILEPATH)
-        self.assertEqual(response.status_code, 200)
+        with patch('ohapi.utils_fs.open', mock_open(), create=True):
+            FILEPATH = 'ohapi/tests/data/test_download_dir/test_download_file'
+            DOWNLOAD_URL = 'http://www.loremipsum.de/downloads/version1.txt'
+            response = download_file(
+                download_url=DOWNLOAD_URL, target_filepath=FILEPATH)
+            self.assertEqual(response.status_code, 200)
