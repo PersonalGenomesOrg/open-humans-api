@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import mock_open, patch
+from unittest.mock import mock_open, patch, MagicMock
 import pytest
 import vcr
 import os
@@ -376,119 +376,51 @@ class APITestUpload(TestCase):
     @my_vcr.use_cassette()
     def test_upload_file_invalid_access_token(self):
         with self.assertRaises(Exception):
-            with patch('%s.open' % __name__, mock_open(), create=True):
-                with patch('ohapi.api.open', mock_open(), create=True):
-                    try:
-                        filename = 'foo'
-
-                        def fake_stat(arg):
-                            if arg == filename:
-                                faked = list(orig_os_stat('/tmp'))
-                                faked[stat.ST_SIZE] = len('some stuff')
-                                return stat_result(faked)
-                            else:
-                                return orig_os_stat(arg)
-                        orig_os_stat = os.stat
-                        os.stat = fake_stat
-                        with open('foo', 'w') as h:
-                            h.write('some stuff')
-                        response = upload_file(
-                            target_filepath='foo',
-                            metadata=FILE_METADATA,
-                            access_token=ACCESS_TOKEN_INVALID,
-                            project_member_id=VALID_PMI1)
-                        assert response.json() == {"detail": "Invalid token."}
-                    finally:
-                        os.stat = orig_os_stat
+            with patch('ohapi.api.open', mock_open(), create=True):
+                    response = upload_file(
+                        target_filepath='foo',
+                        metadata=FILE_METADATA,
+                        access_token=ACCESS_TOKEN_INVALID,
+                        project_member_id=VALID_PMI1)
+                    assert response.json() == {"detail": "Invalid token."}
 
     @my_vcr.use_cassette()
     def test_upload_file_expired_access_token(self):
         with self.assertRaises(Exception):
-            with patch('%s.open' % __name__, mock_open(), create=True):
-                with patch('ohapi.api.open', mock_open(), create=True):
-                    try:
-                        filename = 'foo'
-
-                        def fake_stat(arg):
-                            if arg == filename:
-                                faked = list(orig_os_stat('/tmp'))
-                                faked[stat.ST_SIZE] = len('some stuff')
-                                return stat_result(faked)
-                            else:
-                                return orig_os_stat(arg)
-                        orig_os_stat = os.stat
-                        os.stat = fake_stat
-                        with open('foo', 'w') as h:
-                            h.write('some stuff')
-                        response = upload_file(
-                            target_filepath='foo',
-                            metadata=FILE_METADATA,
-                            access_token=ACCESS_TOKEN_EXPIRED,
-                            project_member_id=VALID_PMI1)
-                        assert response.json() == {"detail": "Expired token."}
-                    finally:
-                        os.stat = orig_os_stat
+            with patch('ohapi.api.open', mock_open(), create=True):
+                response = upload_file(
+                    target_filepath='foo',
+                    metadata=FILE_METADATA,
+                    access_token=ACCESS_TOKEN_EXPIRED,
+                    project_member_id=VALID_PMI1)
+                assert response.json() == {"detail": "Expired token."}
 
     @my_vcr.use_cassette()
     def test_upload_file_invalid_metadata_with_description(self):
         with self.assertRaises(Exception):
-            with patch('%s.open' % __name__, mock_open(), create=True):
-                with patch('ohapi.api.open', mock_open(), create=True):
-                    try:
-                        filename = 'foo'
-
-                        def fake_stat(arg):
-                            if arg == filename:
-                                faked = list(orig_os_stat('/tmp'))
-                                faked[stat.ST_SIZE] = len('some stuff')
-                                return stat_result(faked)
-                            else:
-                                return orig_os_stat(arg)
-                        orig_os_stat = os.stat
-                        os.stat = fake_stat
-                        with open('foo', 'w') as h:
-                            h.write('some stuff')
-                        response = upload_file(
-                            target_filepath='foo',
-                            metadata=FILE_METADATA_INVALID_WITH_DESC,
-                            access_token=ACCESS_TOKEN,
-                            project_member_id=VALID_PMI1)
-                        assert response.json() == {
-                            "metadata":
-                            ["\"tags\" is a required " +
-                             "field of the metadata"]}
-                    finally:
-                        os.stat = orig_os_stat
+            with patch('ohapi.api.open', mock_open(), create=True):
+                response = upload_file(
+                    target_filepath='foo',
+                    metadata=FILE_METADATA_INVALID_WITH_DESC,
+                    access_token=ACCESS_TOKEN,
+                    project_member_id=VALID_PMI1)
+                assert response.json() == {
+                    "metadata":
+                    ["\"tags\" is a required " +
+                     "field of the metadata"]}
 
     @my_vcr.use_cassette()
     def test_upload_file_invalid_metadata_without_description(self):
         with self.assertRaises(Exception):
-            with patch('%s.open' % __name__, mock_open(), create=True):
-                with patch('ohapi.api.open', mock_open(), create=True):
-                    try:
-                        filename = 'foo'
-
-                        def fake_stat(arg):
-                            if arg == filename:
-                                faked = list(orig_os_stat('/tmp'))
-                                faked[stat.ST_SIZE] = len('some stuff')
-                                return stat_result(faked)
-                            else:
-                                return orig_os_stat(arg)
-                        orig_os_stat = os.stat
-                        os.stat = fake_stat
-                        with open('foo', 'w') as h:
-                            h.write('some stuff')
-                        response = upload_file(target_filepath='foo',
-                                               metadata=FILE_METADATA_INVALID,
-                                               access_token=ACCESS_TOKEN,
-                                               project_member_id=VALID_PMI1)
-                        assert response.json() == {
-                            "metadata":
-                            ["\"description\" is a " +
-                             "required field of the metadata"]}
-                    finally:
-                        os.stat = orig_os_stat
+            with patch('ohapi.api.open', mock_open(), create=True):
+                response = upload_file(target_filepath='foo',
+                                       metadata=FILE_METADATA_INVALID,
+                                       access_token=ACCESS_TOKEN,
+                                       project_member_id=VALID_PMI1)
+                assert response.json() == {
+                    "metadata":
+                    ["\"description\" is a " +
+                     "required field of the metadata"]}
 
     @my_vcr.use_cassette()
     def test_upload_file_empty(self):
@@ -558,135 +490,64 @@ class APITestUpload(TestCase):
                                  '_info_not_none_invalid_access_' +
                                  'token.yaml') as cass:
             with self.assertRaises(Exception):
-                with patch('%s.open' % __name__, mock_open(), create=True):
-                    with patch('ohapi.api.open', mock_open(), create=True):
-                        try:
-                            filename = 'foo'
-
-                            def fake_stat(arg):
-                                if arg == filename:
-                                    faked = list(orig_os_stat('/tmp'))
-                                    faked[stat.ST_SIZE] = len('some stuff')
-                                    return stat_result(faked)
-                                else:
-                                    return orig_os_stat(arg)
-                            orig_os_stat = os.stat
-                            os.stat = fake_stat
-                            with open('foo', 'w') as h:
-                                h.write('some stuff')
-                            upload_file(target_filepath='foo',
-                                        metadata=FILE_METADATA,
-                                        access_token=ACCESS_TOKEN_INVALID,
-                                        project_member_id=VALID_PMI1,
-                                        remote_file_info=REMOTE_FILE_INFO)
-                            self.assertEqual(cass.responses[0][
-                                             "status"]["code"], 200)
-                            self.assertEqual(
-                                cass.responses[1]["body"]["string"]
-                                .decode('utf-8'),
-                                '{"detail": "Invalid token."}')
-                        finally:
-                            os.stat = orig_os_stat
+                with patch('ohapi.api.open', mock_open(), create=True):
+                    upload_file(target_filepath='foo',
+                                metadata=FILE_METADATA,
+                                access_token=ACCESS_TOKEN_INVALID,
+                                project_member_id=VALID_PMI1,
+                                remote_file_info=REMOTE_FILE_INFO)
+                    self.assertEqual(cass.responses[0][
+                                     "status"]["code"], 200)
+                    self.assertEqual(
+                        cass.responses[1]["body"]["string"]
+                        .decode('utf-8'),
+                        '{"detail": "Invalid token."}')
 
     def test_upload_file_remote_info_not_none_expired_access_token(self):
         with my_vcr.use_cassette('ohapi/cassettes/test_upload_file_remote_' +
                                  'info_not_none_expired_access_' +
                                  'token.yaml') as cass:
             with self.assertRaises(Exception):
-                with patch('%s.open' % __name__, mock_open(), create=True):
-                    with patch('ohapi.api.open', mock_open(), create=True):
-                        try:
-                            filename = 'foo'
-
-                            def fake_stat(arg):
-                                if arg == filename:
-                                    faked = list(orig_os_stat('/tmp'))
-                                    faked[stat.ST_SIZE] = len('some stuff')
-                                    return stat_result(faked)
-                                else:
-                                    return orig_os_stat(arg)
-                            orig_os_stat = os.stat
-                            os.stat = fake_stat
-                            with open('foo', 'w') as h:
-                                h.write('some stuff')
-                            upload_file(target_filepath='foo',
-                                        metadata=FILE_METADATA,
-                                        access_token=ACCESS_TOKEN_EXPIRED,
-                                        project_member_id=VALID_PMI1,
-                                        remote_file_info=REMOTE_FILE_INFO)
-                            self.assertEqual(cass.responses[0][
-                                             "status"]["code"], 200)
-                            self.assertEqual(
-                                cass.responses[1]["body"]["string"]
-                                .decode('utf-8'),
-                                '{"detail": "Expired token."}')
-                        finally:
-                            os.stat = orig_os_stat
+                with patch('ohapi.api.open', mock_open(), create=True):
+                    upload_file(target_filepath='foo',
+                                metadata=FILE_METADATA,
+                                access_token=ACCESS_TOKEN_EXPIRED,
+                                project_member_id=VALID_PMI1,
+                                remote_file_info=REMOTE_FILE_INFO)
+                    self.assertEqual(cass.responses[0][
+                                     "status"]["code"], 200)
+                    self.assertEqual(
+                        cass.responses[1]["body"]["string"]
+                        .decode('utf-8'),
+                        '{"detail": "Expired token."}')
 
     def test_upload_file_empty_remote_info_not_none(self):
         with my_vcr.use_cassette('ohapi/cassettes/test_upload_file_empty_' +
                                  'remote_info_not_none.yaml') as cass:
             with self.assertRaises(Exception):
-                with patch('%s.open' % __name__, mock_open(), create=True):
-                    with patch('ohapi.api.open', mock_open(), create=True):
-                        try:
-                            filename = 'foo'
-
-                            def fake_stat(arg):
-                                if arg == filename:
-                                    faked = list(orig_os_stat('/tmp'))
-                                    faked[stat.ST_SIZE] = len('some stuff')
-                                    return stat_result(faked)
-                                else:
-                                    return orig_os_stat(arg)
-                            orig_os_stat = os.stat
-                            os.stat = fake_stat
-                            with open('foo', 'w') as h:
-                                h.write('')
-                            upload_file(target_filepath='foo',
-                                        metadata=FILE_METADATA,
-                                        access_token=ACCESS_TOKEN,
-                                        project_member_id=VALID_PMI1,
-                                        remote_file_info=REMOTE_FILE_INFO)
-                            self.assertEqual(cass.responses[0][
-                                             "status"]["code"], 200)
-                            self.assertEqual(
-                                cass.responses[1]["body"]["string"]
-                                .decode('utf-8'),
-                                '{"data_file": ["The submitted file is' +
-                                ' empty."]}')
-                        finally:
-                            os.stat = orig_os_stat
+                with patch('ohapi.api.open', mock_open(), create=True):
+                    upload_file(target_filepath='foo',
+                                metadata=FILE_METADATA,
+                                access_token=ACCESS_TOKEN,
+                                project_member_id=VALID_PMI1,
+                                remote_file_info=REMOTE_FILE_INFO)
+                    self.assertEqual(cass.responses[0][
+                                     "status"]["code"], 200)
+                    self.assertEqual(
+                        cass.responses[1]["body"]["string"]
+                        .decode('utf-8'),
+                        '{"data_file": ["The submitted file is' +
+                        ' empty."]}')
 
     @my_vcr.use_cassette()
     def test_upload_file_remote_info_not_none_matching_file_size(self):
-        try:
-            with patch('%s.open' % __name__, mock_open(), create=True):
-                with patch('ohapi.api.open', mock_open(), create=True):
-                    try:
-                        filename = 'foo'
-
-                        def fake_stat(arg):
-                            if arg == filename:
-                                faked = list(orig_os_stat('/tmp'))
-                                faked[stat.ST_SIZE] = len('some stuff')
-                                return stat_result(faked)
-                            else:
-                                return orig_os_stat(arg)
-                        orig_os_stat = os.stat
-                        os.stat = fake_stat
-                        with open('foo', 'w') as h:
-                            h.write('some stuff')
-                        self.assertRaises(Exception, upload_file,
-                                          target_filepath='foo',
-                                          metadata=FILE_METADATA,
-                                          access_token=ACCESS_TOKEN,
-                                          project_member_id=VALID_PMI1,
-                                          remote_file_info=REMOTE_FILE_INFO)
-                    finally:
-                        os.stat = orig_os_stat
-        except Exception:
-            pass
+        with patch('ohapi.api.open', mock_open(), create=True):
+            self.assertRaises(Exception, upload_file,
+                              target_filepath='foo',
+                              metadata=FILE_METADATA,
+                              access_token=ACCESS_TOKEN,
+                              project_member_id=VALID_PMI1,
+                              remote_file_info=REMOTE_FILE_INFO)
 
     def test_upload_file_remote_info_not_none_invalid_metadata_with_desc(self):
         with my_vcr.use_cassette('ohapi/cassettes/test_upload_file_remote_' +
@@ -707,7 +568,6 @@ class APITestUpload(TestCase):
                         .decode('utf-8'),
                         '{"metadata":["\\"tags\\" is a required ' +
                         'field of the metadata"]}')
-
 
     def test_upload_file_remote_info_not_none_invalid_metadata(self):
         with my_vcr.use_cassette(
