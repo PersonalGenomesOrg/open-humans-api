@@ -416,6 +416,7 @@ def oauth_token_exchange_cli(client_id, client_secret, redirect_uri,
     print(oauth2_token_exchange(client_id, client_secret, redirect_uri,
                                 base_url, code, refresh_token))
 
+@click.command()
 @click.option('-r', '--redirect_uri',
               help='Redirect URL for project')
 @click.option('-c', '--client_id',
