@@ -196,11 +196,19 @@ class OHProject:
             filepath = os.path.join(target_member_dir, filename)
             remote_file_info = (project_data[filename] if filename in
                                 project_data else None)
-            upload_file(target_filepath=filepath,
-                        metadata=metadata[filename],
-                        access_token=access_token,
-                        project_member_id=member_data['project_member_id'],
-                        remote_file_info=remote_file_info)
+            filesize = os.stat(target_filepath).st_size
+            if filesize < max_size:
+                upload_file(target_filepath=filepath,
+                            metadata=metadata[filename],
+                            access_token=access_token,
+                            project_member_id=member_data['project_member_id'],
+                            remote_file_info=remote_file_info)
+            else:
+                upload_aws(target_filepath=filepath,
+                           metadata=metadata[filename],
+                           access_token=access_token,
+                           project_member_id=member_data['project_member_id'],
+                           remote_file_info=remote_file_info)
         if mode == 'sync':
             for filename in project_data:
                 if filename not in metadata:
