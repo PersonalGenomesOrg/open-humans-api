@@ -1,0 +1,79 @@
+interactions:
+- request:
+    body: project_member_id=59319749&filename=foo&metadata=%7B%22description%22%3A+%22%22%2C+%22filename%22%3A+%22foo%22%2C+%22tags%22%3A+%5B%5D%2C+%22creation_date%22%3A+%222018-03-30T18%3A13%3A55.373029%2B00%3A00%22%2C+%22md5%22%3A+%22c151651ed5527daf1354041cb7714b93%22%7D
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['265']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent: [python-requests/2.18.4]
+    method: POST
+    uri: https://www.openhumans.org/api/direct-sharing/project/files/upload/direct/?access_token=ACCESSTOKEN
+  response:
+    body: {string: '{"url":"https://open-humans-production.s3.amazonaws.com/member-files/direct-sharing-113/c0ef611e-3524-11e8-be8e-c2dc113bc2b2/foo?Signature=aB1aWi0IiEqrQeJV2TQCqFSd76g%3D&Expires=1522550860&AWSAccessKeyId=AKIAIKNTFUJJTNS6N7HA","id":36780}'}
+    headers:
+      Allow: ['POST, OPTIONS']
+      Cache-Control: ['no-cache, no-store, must-revalidate, max-age=0']
+      Connection: [close]
+      Content-Language: [en]
+      Content-Type: [application/json]
+      Date: ['Sat, 31 Mar 2018 20:47:40 GMT']
+      Expires: ['Sat, 31 Mar 2018 20:47:40 GMT']
+      Last-Modified: ['Sat, 31 Mar 2018 20:47:40 GMT']
+      Server: [Cowboy]
+      Vary: ['Accept, Accept-Language, Cookie']
+      Via: [1.1 vegur]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 201, message: Created}
+- request:
+    body: "0\r\n\r\n"
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Transfer-Encoding: [chunked]
+      User-Agent: [python-requests/2.18.4]
+    method: PUT
+    uri: https://open-humans-production.s3.amazonaws.com/member-files/direct-sharing-113/c0ef611e-3524-11e8-be8e-c2dc113bc2b2/foo?AWSAccessKeyId=AKIAIKNTFUJJTNS6N7HA&Expires=1522550860&Signature=aB1aWi0IiEqrQeJV2TQCqFSd76g%3D
+  response:
+    body: {string: '<?xml version="1.0" encoding="UTF-8"?>
+
+        <Error><Code>NotImplemented</Code><Message>A header you provided implies functionality
+        that is not implemented</Message><Header>Transfer-Encoding</Header><RequestId>A8260E916FB7F1EA</RequestId><HostId>dqUBHH1XVv2Hy7/huPBIbWV32R9x2RoiRmokml6qgqZpN0B+pVCLcorlC05hiV22fC7U7R1lLrI=</HostId></Error>'}
+    headers:
+      Connection: [close]
+      Content-Type: [application/xml]
+      Date: ['Sat, 31 Mar 2018 20:47:40 GMT']
+      Server: [AmazonS3]
+      x-amz-id-2: [dqUBHH1XVv2Hy7/huPBIbWV32R9x2RoiRmokml6qgqZpN0B+pVCLcorlC05hiV22fC7U7R1lLrI=]
+      x-amz-request-id: [A8260E916FB7F1EA]
+    status: {code: 501, message: Not Implemented}
+- request:
+    body: file_id=36780&project_member_id=59319749
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['40']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent: [python-requests/2.18.4]
+    method: POST
+    uri: https://www.openhumans.org/api/direct-sharing/project/files/upload/complete/?access_token=ACCESSTOKEN
+  response:
+    body: {string: '{"status":"ok","size":""}'}
+    headers:
+      Allow: ['POST, OPTIONS']
+      Cache-Control: ['no-cache, no-store, must-revalidate, max-age=0']
+      Connection: [close]
+      Content-Language: [en]
+      Content-Type: [application/json]
+      Date: ['Sat, 31 Mar 2018 20:47:42 GMT']
+      Expires: ['Sat, 31 Mar 2018 20:47:43 GMT']
+      Last-Modified: ['Sat, 31 Mar 2018 20:47:43 GMT']
+      Server: [Cowboy]
+      Vary: ['Accept, Accept-Language, Cookie']
+      Via: [1.1 vegur]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1
