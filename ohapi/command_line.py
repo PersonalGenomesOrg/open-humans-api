@@ -15,12 +15,14 @@ from .api import (OH_BASE_URL, exchange_oauth2_member, message,
 from .projects import OHProject
 
 from .utils_fs import load_metadata_csv, mk_metadata_csv, read_id_list
+from .utils_fs import review_metadata_csv
 
 MAX_FILE_DEFAULT = parse_size('128m')
 
+
 def set_log_level(debug, verbose):
     """
-    Sets the logging level.
+    Function for setting the logging level.
 
     :param debug: This boolean field is the logging level.
     :param verbose: This boolean field is the logging level.
@@ -200,6 +202,7 @@ def download_metadata(master_token, output_csv, verbose=False, debug=False):
 @click.command()
 @click.option('-d', '--directory', help='Target directory', required=True)
 @click.option('--create-csv', help='Create draft CSV metadata', required=True)
+@click.option('--review', help='Review existing metadata files', required=True)
 @click.option('--max-size', help='Maximum file size to consider.',
               default='128m', show_default=True)
 @click.option('-v', '--verbose', help='Show INFO level logging', is_flag=True)
@@ -236,7 +239,15 @@ def upload_metadata(directory, create_csv='', review='',
     set_log_level(debug, verbose)
 
     max_bytes = parse_size(max_size)
-
+    if create_csv and review:
+        ValueError("Either create_csv must be true or review must be true" +
+                   "but not both")
+    if review:
+        if review_metadata_csv(directory, review, max_bytes=max_bytes):
+            print('csv is in the desired format')
+        else:
+            print('Either files dont match or headers are not in the' +
+                  'required format')
     if create_csv:
         mk_metadata_csv(directory, create_csv, max_bytes=max_bytes)
 

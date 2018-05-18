@@ -168,6 +168,97 @@ def load_metadata_csv(input_filepath):
     return metadata
 
 
+def review_metadata_csv_project_specific(filedir, outputfilepath, subdirs,
+                                         max_bytes=MAX_FILE_DEFAULT):
+    """
+    Review metadata file for all files in a directory for a project.
+
+    :param filedir: This field is the filepath of the directory whose csv
+        has to be made.
+    :param outputfilepath: This field is the file path of the output csv.
+    :param subdirs: This field are the subdirectory of the given directory.
+    :param max_bytes: This field is the maximum file size to consider. Its
+        default value is 128m.
+    """
+    with open(outputfilepath, 'r') as outputfile:
+        reader = csv.DictReader(outputfile)
+        headers = reader.fieldnames
+        if headers[0] != 'project_member_id' or headers[1] != 'filename':
+            return False
+        if not set(['project_member_id', 'filename',
+                    'tags', 'description']).issubset(set(headers)):
+            return False
+        file_paths = [os.path.join(subdir, file_name)
+                      for subdir in subdirs
+                      for file_name in os.listdir(subdir) if
+                      os.path.isfile(os.path.join(subdir, file_name)) and
+                      os.stat(os.path.join(subdir,
+                                           file_name)).st_size < max_bytes]
+        nrows = 0
+        for index, row in enumerate(reader):
+            nrows = nrows + 1
+            if not os.path.isfile(os.path.join(filedir, os.path.join(
+                                  str(row['project_member_id'])),
+                    row['filename'])):
+                    return False
+        if nrows != len(file_paths):
+            return False
+        return True
+
+
+def review_metadata_csv_member_specific(filedir, outputfilepath,
+                                        max_bytes=MAX_FILE_DEFAULT):
+    """
+    Review metadata file for all files in a directory for a member.
+
+    :param filedir: This field is the filepath of the directory whose csv
+        has to be made.
+    :param outputfilepath: This field is the file path of the output csv.
+    :param max_bytes: This field is the maximum file size to consider. Its
+        default value is 128m.
+    """
+    with open(outputfilepath, 'r') as outputfile:
+        reader = csv.DictReader(outputfile)
+        headers = reader.fieldnames
+        if headers[0] != 'filename':
+            return False
+        if not set(['filename',
+                    'tags', 'description']).issubset(set(headers)):
+            return False
+        filenames = [filename for filename in os.listdir(filedir) if
+                     os.stat(os.path.join(filedir,
+                                          filename)).st_size < max_bytes]
+        nrows = 0
+        for index, row in enumerate(reader):
+            nrows = nrows + 1
+            if row['filename'] not in filenames:
+                return False
+        reader = csv.DictReader(outputfile)
+        if len(filenames) != nrows:
+            return False
+        return True
+
+
+def review_metadata_csv(filedir, outputfilepath, max_bytes=MAX_FILE_DEFAULT):
+    """
+    Review metadata file for all files in a directory.
+
+    :param filedir: This field is the filepath of the directory whose csv
+        has to be made.
+    :param outputfilepath: This field is the file path of the output csv.
+    :param max_bytes: This field is the maximum file size to consider. Its
+        default value is 128m.
+    """
+    subdirs = [os.path.join(filedir, i) for i in os.listdir(filedir) if
+               os.path.isdir(os.path.join(filedir, i))]
+    if subdirs:
+        return review_metadata_csv_project_specific(filedir, outputfilepath,
+                                                    subdirs, max_bytes)
+    else:
+        return review_metadata_csv_member_specific(filedir, outputfilepath,
+                                                   max_bytes)
+
+
 def mk_metadata_csv(filedir, outputfilepath, max_bytes=MAX_FILE_DEFAULT):
     """
     Make metadata file for all files in a directory.
