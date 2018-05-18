@@ -197,8 +197,8 @@ def review_metadata_csv_project_specific(filedir, outputfilepath, subdirs,
         nrows = 0
         for index, row in enumerate(reader):
             nrows = nrows + 1
-            if not row['project_member_id'] or not row['filename'] or
-            not row['tags'] or not row['description']:
+            if (not row['project_member_id'] or not row['filename'] or
+               not row['tags'] or not row['description']):
                 return False
             if not os.path.isfile(os.path.join(filedir, os.path.join(
                                   str(row['project_member_id'])),
@@ -234,8 +234,8 @@ def review_metadata_csv_member_specific(filedir, outputfilepath,
         nrows = 0
         for index, row in enumerate(reader):
             nrows = nrows + 1
-            if row['filename'] not in filenames or not row['filename'] or
-            not row['tags'] or not row['description']:
+            if (not row['filename'] or not row['tags'] or
+               not row['description'] or row['filename'] not in filenames):
                 return False
         reader = csv.DictReader(outputfile)
         if len(filenames) != nrows:
