@@ -246,8 +246,7 @@ def upload_metadata(directory, create_csv='', review='',
         if review_metadata_csv(directory, review, max_bytes=max_bytes):
             print('csv is in the desired format')
         else:
-            print('Either files dont match or headers are not in the' +
-                  'required format')
+            print('csv is not in the desired format')
     if create_csv:
         mk_metadata_csv(directory, create_csv, max_bytes=max_bytes)
 

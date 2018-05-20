@@ -9,7 +9,7 @@ import re
 
 import arrow
 from humanfriendly import format_size, parse_size
-from .api import exceeds_size
+# from .api import exceeds_size
 import requests
 
 
@@ -168,99 +168,82 @@ def load_metadata_csv(input_filepath):
     return metadata
 
 
-def review_metadata_csv_project_specific(filedir, outputfilepath, subdirs,
-                                         max_bytes=MAX_FILE_DEFAULT):
+def is_valid_datetime(date):
     """
-    Review metadata file for all files in a directory for a project.
+    Check if creation date is in ISO1069 format.
+
+    :param date: This field is creation date of the file.
+    """
+    regex = (r'^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-' +
+             r'(3[01]|0[1-9]|[12][0-9])' +
+             r'T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)' +
+             r'?(Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$')
+    match_iso8601 = re.compile(regex).match
+    try:
+        if match_iso8601(date) is not None:
+            return True
+    except:
+        pass
+    print("date is not in ISO1069 format")
+    return False
+
+
+def is_metadata_valid(file_metadata):
+    """
+    Check if metadata fields like description,tags and creation date are valid.
+
+    :param file_metadata: This field is metadata of file.
+    """
+    if('tags' not in file_metadata or
+       'description' not in file_metadata):
+        return False
+    if('creation_date'in file_metadata and not
+       is_valid_datetime(file_metadata["creation_date"])):
+        return False
+    return True
+
+
+def is_project_member_id_valid(project_member_id):
+    """
+    Check if poject_member_id is valid.
+
+    :param project_member_id: This filed is particular project_member_id.
+    """
+    return project_member_id.isdigit() and len(project_member_id) == 8
+
+
+def review_metadata_csv(filedir, input_filepath):
+    """
+    Check validity of metadata fields.
 
     :param filedir: This field is the filepath of the directory whose csv
         has to be made.
     :param outputfilepath: This field is the file path of the output csv.
-    :param subdirs: This field are the subdirectory of the given directory.
     :param max_bytes: This field is the maximum file size to consider. Its
         default value is 128m.
     """
-    with open(outputfilepath, 'r') as outputfile:
-        reader = csv.DictReader(outputfile)
-        headers = reader.fieldnames
-        if headers[0] != 'project_member_id' or headers[1] != 'filename':
-            return False
-        if not set(['project_member_id', 'filename',
-                    'tags', 'description']).issubset(set(headers)):
-            return False
-        file_paths = [os.path.join(subdir, file_name)
-                      for subdir in subdirs
-                      for file_name in os.listdir(subdir) if
-                      os.path.isfile(os.path.join(subdir, file_name)) and
-                      os.stat(os.path.join(subdir,
-                                           file_name)).st_size < max_bytes]
-        nrows = 0
-        for index, row in enumerate(reader):
-            nrows = nrows + 1
-            if (not row['project_member_id'] or not row['filename'] or
-               not row['tags'] or not row['description']):
+    metadata = load_metadata_csv(input_filepath)
+
+    with open(input_filepath) as f:
+        csv_in = csv.reader(f)
+        header = next(csv_in)
+        if header[0] == 'filename':
+            if not validate_metadata(filedir, metadata):
                 return False
-            if not os.path.isfile(os.path.join(filedir, os.path.join(
-                                  str(row['project_member_id'])),
-                    row['filename'])):
+            for filename, file_metadata in metadata.items():
+                if not is_metadata_valid(file_metadata):
                     return False
-        if nrows != len(file_paths):
-            return False
-        return True
-
-
-def review_metadata_csv_member_specific(filedir, outputfilepath,
-                                        max_bytes=MAX_FILE_DEFAULT):
-    """
-    Review metadata file for all files in a directory for a member.
-
-    :param filedir: This field is the filepath of the directory whose csv
-        has to be made.
-    :param outputfilepath: This field is the file path of the output csv.
-    :param max_bytes: This field is the maximum file size to consider. Its
-        default value is 128m.
-    """
-    with open(outputfilepath, 'r') as outputfile:
-        reader = csv.DictReader(outputfile)
-        headers = reader.fieldnames
-        if headers[0] != 'filename':
-            return False
-        if not set(['filename',
-                    'tags', 'description']).issubset(set(headers)):
-            return False
-        filenames = [filename for filename in os.listdir(filedir) if
-                     os.stat(os.path.join(filedir,
-                                          filename)).st_size < max_bytes]
-        nrows = 0
-        for index, row in enumerate(reader):
-            nrows = nrows + 1
-            if (not row['filename'] or not row['tags'] or
-               not row['description'] or row['filename'] not in filenames):
-                return False
-        reader = csv.DictReader(outputfile)
-        if len(filenames) != nrows:
-            return False
-        return True
-
-
-def review_metadata_csv(filedir, outputfilepath, max_bytes=MAX_FILE_DEFAULT):
-    """
-    Review metadata file for all files in a directory.
-
-    :param filedir: This field is the filepath of the directory whose csv
-        has to be made.
-    :param outputfilepath: This field is the file path of the output csv.
-    :param max_bytes: This field is the maximum file size to consider. Its
-        default value is 128m.
-    """
-    subdirs = [os.path.join(filedir, i) for i in os.listdir(filedir) if
-               os.path.isdir(os.path.join(filedir, i))]
-    if subdirs:
-        return review_metadata_csv_project_specific(filedir, outputfilepath,
-                                                    subdirs, max_bytes)
-    else:
-        return review_metadata_csv_member_specific(filedir, outputfilepath,
-                                                   max_bytes)
+        elif header[0] == 'project_member_id':
+            for project_member_id, member_metadata in metadata.items():
+                if not validate_metadata(os.path.join
+                                         (filedir, project_member_id),
+                                         member_metadata):
+                    return False
+                for filename, file_metadata in member_metadata.items():
+                    if(not is_metadata_valid(file_metadata) or not
+                            is_project_member_id_valid(project_member_id)):
+                        return False
+    return True
 
 
 def mk_metadata_csv(filedir, outputfilepath, max_bytes=MAX_FILE_DEFAULT):
