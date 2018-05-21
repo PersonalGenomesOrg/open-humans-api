@@ -1,0 +1,30 @@
+interactions:
+- request:
+    body: project_member_id=59319749&filename=foo&metadata=%7B%22creation_date%22%3A+%222018-03-30T18%3A13%3A55.373029%2B00%3A00%22%2C+%22tags%22%3A+%5B%5D%2C+%22filename%22%3A+%22foo%22%2C+%22md5%22%3A+%22c151651ed5527daf1354041cb7714b93%22%2C+%22description%22%3A+%22%22%7D
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['265']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent: [python-requests/2.18.4]
+    method: POST
+    uri: https://www.openhumans.org/api/direct-sharing/project/files/upload/direct/?access_token=ACCESSTOKEN
+  response:
+    body: {string: '{"detail":"Invalid token."}'}
+    headers:
+      Allow: ['POST, OPTIONS']
+      Cache-Control: ['must-revalidate, no-store, max-age=0, no-cache']
+      Connection: [close]
+      Content-Language: [en]
+      Content-Type: [application/json]
+      Date: ['Sat, 31 Mar 2018 09:17:53 GMT']
+      Expires: ['Sat, 31 Mar 2018 09:17:54 GMT']
+      Last-Modified: ['Sat, 31 Mar 2018 09:17:54 GMT']
+      Server: [Cowboy]
+      Vary: ['Accept, Accept-Language, Cookie']
+      Via: [1.1 vegur]
+      Www-Authenticate: [Bearer realm="api"]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 401, message: Unauthorized}
+version: 1

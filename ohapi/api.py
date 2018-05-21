@@ -277,7 +277,6 @@ def message(subject, message, access_token, all_members=False,
         return r
 
 
-
 def exceeds_size(filesize, max_bytes, target_filepath):
     if filesize > max_bytes:
         logging.info('Skipping {}, {} > {}'.format(

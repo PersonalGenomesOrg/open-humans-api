@@ -1,0 +1,29 @@
+interactions:
+- request:
+    body: filename=foo&project_member_id=59319749&metadata=%7B%22filename%22%3A+%22foo%22%2C+%22tags%22%3A+%22%22%2C+%22description%22%3A+%22%22%7D
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['137']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent: [python-requests/2.18.4]
+    method: POST
+    uri: https://www.openhumans.org/api/direct-sharing/project/files/upload/direct/?access_token=ACCESSTOKEN
+  response:
+    body: {string: '{"metadata":["\"tags\" must be an array of strings"]}'}
+    headers:
+      Allow: ['POST, OPTIONS']
+      Cache-Control: ['must-revalidate, no-store, max-age=0, no-cache']
+      Connection: [close]
+      Content-Language: [en]
+      Content-Type: [application/json]
+      Date: ['Sat, 31 Mar 2018 10:41:01 GMT']
+      Expires: ['Sat, 31 Mar 2018 10:41:01 GMT']
+      Last-Modified: ['Sat, 31 Mar 2018 10:41:01 GMT']
+      Server: [Cowboy]
+      Vary: ['Accept, Accept-Language, Cookie']
+      Via: [1.1 vegur]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 400, message: Bad Request}
+version: 1
