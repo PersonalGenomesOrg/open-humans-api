@@ -9,7 +9,7 @@ import re
 
 import arrow
 from humanfriendly import format_size, parse_size
-# from .api import exceeds_size
+from .api import exceeds_size
 import requests
 
 
@@ -179,13 +179,11 @@ def is_valid_datetime(date):
              r'T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)' +
              r'?(Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$')
     match_iso8601 = re.compile(regex).match
-    try:
-        if match_iso8601(date) is not None:
+    if match_iso8601(date) is not None:
             return True
-    except:
-        pass
-    print("date is not in ISO1069 format")
-    return False
+    else:
+        print("date is not in ISO1069 format")
+        return False
 
 
 def is_metadata_valid(file_metadata):
