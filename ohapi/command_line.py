@@ -10,7 +10,8 @@ from click import UsageError
 from humanfriendly import parse_size
 
 from .api import (OH_BASE_URL, exchange_oauth2_member, message,
-                  delete_file, oauth2_auth_url)
+                  delete_file, oauth2_auth_url,
+                  oauth2_token_exchange)
 
 from .projects import OHProject
 
@@ -204,18 +205,18 @@ def download_metadata(master_token, output_csv, verbose=False, debug=False):
               default='128m', show_default=True)
 @click.option('-v', '--verbose', help='Show INFO level logging', is_flag=True)
 @click.option('--debug', help='Show DEBUG level logging.', is_flag=True)
-def upload_metadata_cli(directory, create_csv='', create_json='', review='',
+def upload_metadata_cli(directory, create_csv='', review='',
                         max_size='128m', verbose=False, debug=False):
     """
     Command line function for drafting or reviewing metadata files.
     For more information visit
     :func:`upload_metadata<ohapi.command_line.upload_metadata>`.
     """
-    return upload_metadata(directory, create_csv, create_json, review,
+    return upload_metadata(directory, create_csv, review,
                            max_size, verbose, debug)
 
 
-def upload_metadata(directory, create_csv='', create_json='', review='',
+def upload_metadata(directory, create_csv='', review='',
                     max_size='128m', verbose=False, debug=False):
     """
     Draft or review metadata files for uploading files to Open Humans.
@@ -392,6 +393,30 @@ def upload(directory, metadata_csv, master_token=None, member=None,
 
 
 @click.command()
+@click.option('-cid', '--client_id',
+              help='client id of user.', required=True)
+@click.option('-cs', '--client_secret',
+              help='client secret of user.', required=True)
+@click.option('-re_uri', '--redirect_uri',
+              help='redirect_uri of user', required=True)
+@click.option('--base_url', help='base url of Open Humans',
+              default=OH_BASE_URL, show_default=True)
+@click.option('--code', help='code of user',
+              default=None, show_default=True)
+@click.option('-rt', '--refresh_token', help='refresh token of user',
+              default=None, show_default=True)
+def oauth_token_exchange_cli(client_id, client_secret, redirect_uri,
+                             base_url=OH_BASE_URL, code=None,
+                             refresh_token=None):
+    """
+    Command line function for obtaining the refresh token/code.
+    For more information visit
+    :func:`oauth2_token_exchange<ohapi.api.oauth2_token_exchange>`.
+    """
+    print(oauth2_token_exchange(client_id, client_secret, redirect_uri,
+                                base_url, code, refresh_token))
+
+@click.command()
 @click.option('-r', '--redirect_uri',
               help='Redirect URL for project')
 @click.option('-c', '--client_id',
@@ -403,7 +428,7 @@ def oauth2_auth_url_cli(redirect_uri=None, client_id=None,
     Command line function for obtaining the Oauth2 url.
     For more information visit
     :func:`oauth2_auth_url<ohapi.api.oauth2_auth_url>`.
-"""
+    """
     result = oauth2_auth_url(redirect_uri, client_id, base_url)
     print('The requested URL is : \r')
     print(result)
