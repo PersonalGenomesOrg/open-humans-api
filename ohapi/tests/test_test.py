@@ -154,7 +154,9 @@ class UtilsTest(TestCase):
     def test_mk_metadata_single_user(self):
             with patch('ohapi.utils_fs.os.path.isdir') as mocked_isdir, \
                     patch('ohapi.utils_fs.os.listdir') as mocked_listdir:
-                with patch('ohapi.utils_fs.open', mock_open(read_data=b'some stuff'), create=True,):
+                with patch('ohapi.utils_fs.open',
+                           mock_open(read_data=b'some stuff'),
+                           create=True):
                     mocked_isdir.return_value = True
                     mocked_listdir.return_value = ['f1.txt', 'f2.txt']
                     mocked_isdir.side_effect = [False, False]
@@ -166,18 +168,22 @@ class UtilsTest(TestCase):
                             return stat_result(faked)
                         orig_os_stat = os.stat
                         os.stat = fake_stat
-
                         teststream = StringIO()
                         write_metadata_to_filestream('test_dir', teststream)
-                        assert(teststream.getvalue() == 'filename,tags,description,md5,creation_date\r\n' +
-                                                        "f1.txt,,,beb6a43adfb950ec6f82ceed19beee21,2017-06-11T06:57:19.694165+00:00\r\n" +
-                                                        "f2.txt,,,beb6a43adfb950ec6f82ceed19beee21,2017-06-11T06:57:19.694165+00:00\r\n")
+                        content = teststream.getvalue()
+                        assert(len(content) == 197 and content.startswith(
+                            'filename,tags,description,md5,' +
+                            'creation_date\r\n') and "f1.txt,,,beb6a43adfb95" +
+                            "0ec6f82ceed19beee21,2017-06-11T06:57:19.694165+" +
+                            "00:00\r\n" in content and "f2.txt,,,beb6a43adfb" +
+                            "950ec6f82ceed19beee21," +
+                            "2017-06-11T06:57:19.694165+00:00\r\n" in content)
                     finally:
                         os.stat = orig_os_stat
 
     def test_mk_metadata_multi_user(self):
-        with patch('ohapi.utils_fs.open', mock_open(read_data=b'some stuff'), create=True,):
-
+        with patch('ohapi.utils_fs.open', mock_open(read_data=b'some stuff'),
+                   create=True):
             orig_os_stat = os.stat
             orig_os_is_dir = os.path.isdir
             orig_os_list_dir = os.listdir
@@ -192,26 +198,26 @@ class UtilsTest(TestCase):
                     if arg == 'test_dir':
                         return ['12345678']
                     elif '12345678' in arg:
-                        return [ 'f1.txt', 'f2.txt']
-
+                        return ['f1.txt', 'f2.txt']
 
                 def fake_is_dir(arg):
-                    if ('test_dir') in arg  or ('12345678') in arg:
+                    if ('test_dir') in arg or ('12345678') in arg:
                         return True
-                    elif ( 'f1.txt') in arg or ('f2.txt') in arg:
+                    elif ('f1.txt') in arg or ('f2.txt') in arg:
                         return False
-
-
                 os.listdir = fake_list_dir
                 os.path.isdir = fake_is_dir
                 os.stat = fake_stat
-
                 teststream = StringIO()
                 write_metadata_to_filestream('test_dir', teststream)
-                print(teststream.getvalue())
-                assert(teststream.getvalue() == 'project_member_id,filename,tags,description,md5,creation_date\r\n' +
-                                                "12345678,f1.txt,,,beb6a43adfb950ec6f82ceed19beee21,2017-06-11T06:57:19.694165+00:00\r\n" +
-                                                "12345678,f2.txt,,,beb6a43adfb950ec6f82ceed19beee21,2017-06-11T06:57:19.694165+00:00\r\n")
+                content = teststream.getvalue()
+                assert(len(content) == 233 and content.startswith(
+                    'project_member_id,filename,tags,description,md5,' +
+                    'creation_date\r\n') and "12345678,f1.txt,,,beb6a43adfb9" +
+                    "50ec6f82ceed19beee21,2017-06-11T06:57:19.694165+" +
+                    "00:00\r\n" in content and "12345678,f2.txt,,,beb6a43adf" +
+                    "b950ec6f82ceed19beee21," +
+                    "2017-06-11T06:57:19.694165+00:00\r\n" in content)
             finally:
                 os.stat = orig_os_stat
                 os.listdir = orig_os_list_dir
