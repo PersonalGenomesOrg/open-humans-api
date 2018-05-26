@@ -87,58 +87,20 @@ def validate_metadata(target_dir, metadata):
         match metadata
     :param metadata: This field contains the metadata to be matched.
     """
+    if not os.path.isdir(target_dir):
+        print(target_dir, "is not a directory")
+        return False
     file_list = os.listdir(target_dir)
     for filename in file_list:
         if filename not in metadata:
+            print(filename, " present at", target_dir,
+                  "not found in metadata file")
             return False
     for filename in metadata:
         if filename not in file_list:
+            print(filename, " present in metadata file," +
+                  " not found on disk at: ", target_dir)
             return False
-    return True
-
-
-def valid_metadata(target_dir, metadata, project_member_id, filename):
-    """
-    Check that the files listed in metadata exactly match files in target dir.
-
-    :param target_dir: This field is the target directory from which to
-        match metadata
-    :param metadata: This field contains the metadata to be matched.
-    """
-    file_list = os.listdir(target_dir)
-    for filename in file_list:
-        if filename not in metadata:
-            raise ValueError(
-                'Error: for project member id: ', project_member_id,
-                'and filename: ', filename,
-                'filename is not present in metadata')
-    for filename in metadata:
-        if filename not in file_list:
-            raise ValueError(
-                'Error: for filename: ', filename,
-                'filename is not in the file list')
-    return True
-
-
-def valid_metadata_without_project_member_id(target_dir, metadata, filename):
-    """
-    Check that the files listed in metadata exactly match files in target dir.
-
-    :param target_dir: This field is the target directory from which to
-        match metadata
-    :param metadata: This field contains the metadata to be matched.
-    """
-    file_list = os.listdir(target_dir)
-    for filename in file_list:
-        if filename not in metadata:
-            raise ValueError(
-                'Error: for filename: ', filename,
-                'filename is not present in metadata')
-    for filename in metadata:
-        if filename not in file_list:
-            raise ValueError(
-                'Error: for filename: ', filename,
-                'filename is not in the file list')
     return True
 
 
@@ -214,109 +176,143 @@ def load_metadata_csv(input_filepath):
 
 
 def validate_date(date, project_member_id, filename):
+    """
+    Check if date is in ISO 8601 format.
+
+    :param date: This field is the date to be checked.
+    :param project_member_id: This field is the project_member_id corresponding
+        to the date provided.
+    :param filename:This field is the filename corresponding to the date
+        provided.
+    """
     try:
         arrow.get(date)
     except arrow.parser.ParserError:
         raise ValueError(
             'Error: for project member id: ', project_member_id,
-            'and filename: ', filename,
-            'Dates must be in ISO 8601 format')
+            ' and filename: ', filename,
+            ' Dates must be in ISO 8601 format')
 
 
-def is_metadata_valid(file_metadata, project_member_id, filename):
+def is_single_file_metadata_valid(file_metadata, project_member_id, filename):
     """
-    Check if metadata fields like description,tags and creation date are valid.
+    Check if metadata fields like project member id, description, tags, md5 and
+    creation date are valid for a single file.
 
     :param file_metadata: This field is metadata of file.
+    :param project_member_id: This field is the project member id corresponding
+        to the file metadata provided.
+    :param filename: This field is the filename corresponding to the file
+        metadata provided.
     """
-    if not project_member_id.isdigit() or len(project_member_id) != 8:
-        raise ValueError(
-            'Error: for project member id: ', project_member_id,
-            'and filename: ', filename,
-            'project member id must be of 8 digits from 0 to 9')
+    if project_member_id is not None:
+        if not project_member_id.isdigit() or len(project_member_id) != 8:
+            raise ValueError(
+                'Error: for project member id: ', project_member_id,
+                ' and filename: ', filename,
+                ' project member id must be of 8 digits from 0 to 9')
     if 'description' not in file_metadata:
         raise ValueError(
             'Error: for project member id: ', project_member_id,
-            'and filename: ', filename,
-            '""description" is a required field of the metadata')
+            ' and filename: ', filename,
+            ' "description" is a required field of the metadata')
 
     if not isinstance(file_metadata['description'], str):
         raise ValueError(
             'Error: for project member id: ', project_member_id,
-            'and filename: ', filename,
-            '"description" must be a string')
+            ' and filename: ', filename,
+            ' "description" must be a string')
 
     if 'tags' not in file_metadata:
         raise ValueError(
             'Error: for project member id: ', project_member_id,
-            'and filename: ', filename,
-            '"tags" is a required field of the metadata')
+            ' and filename: ', filename,
+            ' "tags" is a required field of the metadata')
 
     if not isinstance(file_metadata['tags'], list):
         raise ValueError(
             'Error: for project member id: ', project_member_id,
-            'and filename: ', filename,
-            '"tags" must be an array of strings')
+            ' and filename: ', filename,
+            ' "tags" must be an array of strings')
 
     if 'creation_date' in file_metadata:
-        validate_date(file_metadata['creation_date'])
+        if not validate_date(file_metadata['creation_date'], project_member_id,
+                             filename):
+            return False
 
     if 'md5' in file_metadata:
         if not re.match(r'[a-z0-9]{32}', file_metadata['md5'],
                         flags=re.IGNORECASE):
             raise ValueError(
                 'Error: for project member id: ', project_member_id,
-                'and filename: ', filename,
-                'Invalid MD5 specified')
+                ' and filename: ', filename,
+                ' Invalid MD5 specified')
 
-    return file_metadata
+    return True
 
 
-def validate_date_without_project_member_id(date, filename):
+def review_metadata_csv_single_user(filedir, metadata, csv_in, n_headers):
+    """
+    Check validity of metadata for single user.
+
+    :param filedir: This field is the filepath of the directory whose csv
+        has to be made.
+    :param metadata: This field is the metadata generated from the
+        load_metadata_csv function.
+    :param csv_in: This field returns a reader object which iterates over the
+        csv.
+    :param n_headers: This field is the number of headers in the csv.
+    """
     try:
-        arrow.get(date)
-    except arrow.parser.ParserError:
-        raise ValueError(
-            'Error: for filename: ', filename,
-            'Dates must be in ISO 8601 format')
+        if not validate_metadata(filedir, metadata):
+            return False
+        for row in csv_in:
+            if len(row) != n_headers:
+                raise ValueError(
+                    'Error: for filename: ', row[0],
+                    ' Number of columns (', len(row), ') does not match' +
+                    ' header row length (', n_headers, ')')
+        for filename, file_metadata in metadata.items():
+            is_single_file_metadata_valid(file_metadata, None, filename)
+    except ValueError as e:
+        print(str(e))
+        return False
+    return True
 
 
-def is_metadata_valid_without_project_member_id(file_metadata, filename):
+def review_metadata_csv_multi_user(filedir, metadata, csv_in, n_headers):
     """
-    Check if metadata fields like description,tags and creation date are valid.
+    Check validity of metadata for multi user.
 
-    :param file_metadata: This field is metadata of file.
+    :param filedir: This field is the filepath of the directory whose csv
+        has to be made.
+    :param metadata: This field is the metadata generated from the
+        load_metadata_csv function.
+    :param csv_in: This field returns a reader object which iterates over the
+        csv.
+    :param n_headers: This field is the number of headers in the csv.
     """
-    if 'description' not in file_metadata:
-        raise ValueError(
-            'Error: for filename: ', filename,
-            ' ""description" is a required field of the metadata')
+    try:
+        for row in csv_in:
+            if len(row) != n_headers:
+                raise ValueError('Error: for project member id: ', row[0],
+                                 ' and filename: ', row[1],
+                                 ' Number of columns (', len(row), ') does' +
+                                 ' not match header row length (', n_headers,
+                                 ')')
+        for project_member_id, member_metadata in metadata.items():
+            if not validate_metadata(os.path.join
+                                     (filedir, project_member_id),
+                                     member_metadata):
+                return False
+            for filename, file_metadata in member_metadata.items():
+                is_single_file_metadata_valid(file_metadata, project_member_id,
+                                              filename)
 
-    if not isinstance(file_metadata['description'], str):
-        raise ValueError(
-            'Error: for filename: ', filename,
-            '"description" must be a string')
-
-    if 'tags' not in file_metadata:
-        raise ValueError(
-            'Error: for filename: ', filename,
-            '"tags" is a required field of the metadata')
-
-    if not isinstance(file_metadata['tags'], list):
-        raise ValueError(
-            'Error: for filename: ', filename,
-            '"tags" must be an array of strings')
-
-    if 'creation_date' in file_metadata:
-        validate_date_without_project_member_id(file_metadata['creation_date'])
-
-    if 'md5' in file_metadata:
-        if not re.match(r'[a-z0-9]{32}', file_metadata['md5'],
-                        flags=re.IGNORECASE):
-            raise ValueError(
-                'Error: for filename: ', filename,
-                'Invalid MD5 specified')
-    return file_metadata
+    except ValueError as e:
+        print(str(e))
+        return False
+    return True
 
 
 def review_metadata_csv(filedir, input_filepath):
@@ -334,28 +330,22 @@ def review_metadata_csv(filedir, input_filepath):
     with open(input_filepath) as f:
         csv_in = csv.reader(f)
         header = next(csv_in)
+        n_headers = len(header)
         if header[0] == 'filename':
-            validate_metadata_without_project_member_id(filedir, metadata)
-            for row in csv_in:
-                if len(row) > 5:
-                    raise ValueError(
-                        'Error: for filename: ', row[0],
-                        ' Number of columns (', len(row), ') does not match header row length (5)')
-            for filename, file_metadata in metadata.items():
-                is_metadata_valid_without_project_member_id(file_metadata, filename)
+            res = review_metadata_csv_single_user(filedir, metadata,
+                                                  csv_in, n_headers)
+            return res
         elif header[0] == 'project_member_id':
-            for project_member_id, member_metadata in metadata.items():
-                validate_metadata(os.path.join
-                                         (filedir, project_member_id),
-                                         member_metadata)
-                for row in csv_in:
-                    if len(row) > 6:
-                        raise ValueError(
-                            'Error: for project member id: ', row[0],
-                            ' and filename: ', row[1],
-                            ' Number of columns (', len(row), ') does not match header row length (6)')
-                for filename, file_metadata in member_metadata.items():
-                    is_metadata_valid(file_metadata, project_member_id, filename)
+            res = review_metadata_csv_multi_user(filedir, metadata,
+                                                 csv_in, n_headers)
+            return res
+        else:
+            print("Error: Headers not in specified format. " +
+                  "For single user upload, please ensure "
+                  "that the first column is file name. " +
+                  "For multi user upload, please ensure that " +
+                  "first column is project member id and second is filename.")
+            return False
 
 
 def mk_metadata_csv(filedir, outputfilepath, max_bytes=MAX_FILE_DEFAULT):
