@@ -14,7 +14,7 @@ from .api import (OH_BASE_URL, exchange_oauth2_member, message,
                   oauth2_token_exchange)
 
 from .projects import OHProject
-from .public import download
+from .public import download as public_download
 from .utils_fs import load_metadata_csv, mk_metadata_csv, read_id_list
 
 MAX_FILE_DEFAULT = parse_size('128m')
@@ -495,8 +495,9 @@ def delete_cli(access_token, project_member_id, base_url=OH_BASE_URL,
               is_flag=True)
 @click.option('--debug', help='Report DEBUG level logging to stdout.',
               is_flag=True)
-def public_data_download_cli(source, username, directory, max_size, quiet, debug):
+def public_data_download_cli(source, username, directory, max_size, quiet,
+                             debug):
     """
     Command line tools for :func:`download<ohapi.public.download>`
     """
-    return public.download(source, username, directory, max_size, quiet, debug)
+    return public_download(source, username, directory, max_size, quiet, debug)
