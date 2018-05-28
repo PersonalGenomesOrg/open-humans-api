@@ -175,6 +175,13 @@ def load_metadata_csv(input_filepath):
     return metadata
 
 
+def printError(e):
+    """
+    Helper function to print error
+    """
+    return " ".join([str(arg) for arg in e.args])
+
+
 def validate_date(date, project_member_id, filename):
     """
     Check if date is in ISO 8601 format.
@@ -275,7 +282,7 @@ def review_metadata_csv_single_user(filedir, metadata, csv_in, n_headers):
         for filename, file_metadata in metadata.items():
             is_single_file_metadata_valid(file_metadata, None, filename)
     except ValueError as e:
-        print(str(e))
+        printError(e)
         return False
     return True
 
@@ -310,7 +317,7 @@ def review_metadata_csv_multi_user(filedir, metadata, csv_in, n_headers):
                                               filename)
 
     except ValueError as e:
-        print(str(e))
+        printError(e)
         return False
     return True
 
