@@ -14,7 +14,7 @@ from .api import (OH_BASE_URL, exchange_oauth2_member, message,
                   oauth2_token_exchange)
 
 from .projects import OHProject
-
+from .public import download as public_download
 from .utils_fs import load_metadata_csv, mk_metadata_csv, read_id_list
 from .utils_fs import review_metadata_csv
 
@@ -492,3 +492,22 @@ def delete_cli(access_token, project_member_id, base_url=OH_BASE_URL,
         print("File deleted successfully")
     else:
         print("Bad response while deleting file.")
+
+
+@click.command()
+@click.option('-s', '--source', help='the source to download files from')
+@click.option('-u', '--username', help='the user to download files from')
+@click.option('-d', '--directory', help='the directory for downloaded files',
+              default='.')
+@click.option('-m', '--max-size', help='the maximum file size to download',
+              default='128m')
+@click.option('-q', '--quiet', help='Report ERROR level logging to stdout',
+              is_flag=True)
+@click.option('--debug', help='Report DEBUG level logging to stdout.',
+              is_flag=True)
+def public_data_download_cli(source, username, directory, max_size, quiet,
+                             debug):
+    """
+    Command line tools for :func:`download<ohapi.public.download>`
+    """
+    return public_download(source, username, directory, max_size, quiet, debug)
