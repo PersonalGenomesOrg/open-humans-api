@@ -114,9 +114,18 @@ def load_metadata_csv_single_user(csv_in, header, tags_idx):
         file.
     """
     metadata = {}
-    for row in csv_in:
+    n_headers = len(header)
+    for index, row in enumerate(csv_in, 2):
+        if row[0] == "":
+            raise ValueError('Error: In row number ' + str(index) + ':' +
+                             ' "filename" must not be empty.')
         if row[0] == 'None' and [x == 'NA' for x in row[1:]]:
             break
+        if len(row) != n_headers:
+            raise ValueError('Error: In row number ' + str(index) + ':' +
+                             ' Number of columns (' + str(len(row)) +
+                             ') doesnt match Number of headings (' +
+                             str(n_headers) + ')')
         metadata[row[0]] = {
             header[i]: row[i] for i in range(1, len(header)) if
             i != tags_idx
@@ -137,11 +146,24 @@ def load_metadata_csv_multi_user(csv_in, header, tags_idx):
         file.
     """
     metadata = {}
-    for row in csv_in:
+    n_headers = len(header)
+    for index, row in enumerate(csv_in, 2):
+        if row[0] == "":
+            raise ValueError('Error: In row number ' + str(index) + ':' +
+                             ' "project_member_id" must not be empty.')
+        if row[1] == "":
+            raise ValueError('Error: In row number ' + str(index) + ':' +
+                             ' "filename" must not be empty.')
         if row[0] not in metadata:
             metadata[row[0]] = {}
         if row[1] == 'None' and all([x == 'NA' for x in row[2:]]):
             continue
+        if len(row) != n_headers:
+            raise ValueError('Error: In row number ' + str(index) + ':' +
+                             ' Number of columns (' + str(len(row)) +
+                             ') doesnt match Number of headings (' +
+                             str(n_headers) + ')')
+
         metadata[row[0]][row[1]] = {
             header[i]: row[i] for i in range(2, len(header)) if
             i != tags_idx
@@ -164,14 +186,25 @@ def load_metadata_csv(input_filepath):
     with open(input_filepath) as f:
         csv_in = csv.reader(f)
         header = next(csv_in)
-        try:
+        if tags in header:
             tags_idx = header.index('tags')
-        except ValueError:
-            tags_idx = None
+        else:
+            raise ValueError('"tags" is a compulsory column in metadata file.')
         if header[0] == 'project_member_id':
-            metadata = load_metadata_csv_multi_user(csv_in, header, tags_idx)
+            if header[1] == 'filename':
+                metadata = load_metadata_csv_multi_user(csv_in, header,
+                                                        tags_idx)
+            else:
+                raise ValueError('Please ensure that the second column is' +
+                                 ' "filename"')
         elif header[0] == 'filename':
             metadata = load_metadata_csv_single_user(csv_in, header, tags_idx)
+        else:
+            raise ValueError('Incorrect Formatting of metadata. The first' +
+                             ' column for single user upload should be' +
+                             ' "filename". For multiuser uploads the first ' +
+                             'column should be "project_member_id" and the' +
+                             ' second column should be "filename"')
     return metadata
 
 
