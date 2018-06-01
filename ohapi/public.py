@@ -189,8 +189,7 @@ def get_data_sources_by_member(base_url=BASE_URL_API, limit=LIMIT_DEFAULT):
     :param limit: It is the limit of data send by one request.
     """
     url = '{}sources-by-member/'.format(base_url)
-    url = '{}?{}'.format(url, urlencode({'limit': limit}))
-    page = url
+    page = '{}?{}'.format(url, urlencode({'limit': limit}))
     results = []
     while True:
         data = get_page(page)
