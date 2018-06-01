@@ -163,7 +163,6 @@ def load_metadata_csv_multi_user(csv_in, header, tags_idx):
                              ' Number of columns (' + str(len(row)) +
                              ') doesnt match Number of headings (' +
                              str(n_headers) + ')')
-
         metadata[row[0]][row[1]] = {
             header[i]: row[i] for i in range(2, len(header)) if
             i != tags_idx
@@ -186,7 +185,7 @@ def load_metadata_csv(input_filepath):
     with open(input_filepath) as f:
         csv_in = csv.reader(f)
         header = next(csv_in)
-        if tags in header:
+        if 'tags' in header:
             tags_idx = header.index('tags')
         else:
             raise ValueError('"tags" is a compulsory column in metadata file.')
@@ -195,15 +194,14 @@ def load_metadata_csv(input_filepath):
                 metadata = load_metadata_csv_multi_user(csv_in, header,
                                                         tags_idx)
             else:
-                raise ValueError('Please ensure that the second column is' +
-                                 ' "filename"')
+                raise ValueError('The second column must be "filename"')
         elif header[0] == 'filename':
             metadata = load_metadata_csv_single_user(csv_in, header, tags_idx)
         else:
             raise ValueError('Incorrect Formatting of metadata. The first' +
                              ' column for single user upload should be' +
                              ' "filename". For multiuser uploads the first ' +
-                             'column should be "project_member_id" and the' +
+                             'column should be "project member id" and the' +
                              ' second column should be "filename"')
     return metadata
 
@@ -309,12 +307,6 @@ def review_metadata_csv_single_user(filedir, metadata, csv_in, n_headers):
     try:
         if not validate_metadata(filedir, metadata):
             return False
-        for row in csv_in:
-            if len(row) != n_headers:
-                raise ValueError(
-                    'Error: for filename: ', row[0],
-                    ' Number of columns (', len(row), ') does not match' +
-                    ' header row length (', n_headers, ')')
         for filename, file_metadata in metadata.items():
             is_single_file_metadata_valid(file_metadata, None, filename)
     except ValueError as e:
@@ -364,13 +356,6 @@ def review_metadata_csv_multi_user(filedir, metadata, csv_in, n_headers):
     try:
         if not validate_subfolders(filedir, metadata):
             return False
-        for row in csv_in:
-            if len(row) != n_headers:
-                raise ValueError('Error: for project member id: ', row[0],
-                                 ' and filename: ', row[1],
-                                 ' Number of columns (', len(row), ') does' +
-                                 ' not match header row length (', n_headers,
-                                 ')')
         for project_member_id, member_metadata in metadata.items():
             if not validate_metadata(os.path.join
                                      (filedir, project_member_id),
@@ -396,7 +381,11 @@ def review_metadata_csv(filedir, input_filepath):
     :param max_bytes: This field is the maximum file size to consider. Its
         default value is 128m.
     """
-    metadata = load_metadata_csv(input_filepath)
+    try:
+        metadata = load_metadata_csv(input_filepath)
+    except ValueError as e:
+        print_error(e)
+        return False
 
     with open(input_filepath) as f:
         csv_in = csv.reader(f)
@@ -406,17 +395,10 @@ def review_metadata_csv(filedir, input_filepath):
             res = review_metadata_csv_single_user(filedir, metadata,
                                                   csv_in, n_headers)
             return res
-        elif header[0] == 'project_member_id':
+        if header[0] == 'project_member_id':
             res = review_metadata_csv_multi_user(filedir, metadata,
                                                  csv_in, n_headers)
             return res
-        else:
-            print("Error: Headers not in specified format. " +
-                  "For single user upload, please ensure "
-                  "that the first column is file name. " +
-                  "For multi user upload, please ensure that " +
-                  "first column is project member id and second is filename.")
-            return False
 
 
 def mk_metadata_csv(filedir, outputfilepath, max_bytes=MAX_FILE_DEFAULT):
