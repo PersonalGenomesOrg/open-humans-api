@@ -88,18 +88,18 @@ def validate_metadata(target_dir, metadata):
     :param metadata: This field contains the metadata to be matched.
     """
     if not os.path.isdir(target_dir):
-        print(target_dir, "is not a directory")
+        print("Error: " + target_dir + " is not a directory")
         return False
     file_list = os.listdir(target_dir)
     for filename in file_list:
         if filename not in metadata:
-            print(filename, " present at", target_dir,
-                  "not found in metadata file")
+            print("Error: " + filename + " present at" + target_dir +
+                  " not found in metadata file")
             return False
     for filename in metadata:
         if filename not in file_list:
-            print(filename, " present in metadata file," +
-                  " not found on disk at: ", target_dir)
+            print("Error: " + filename + " present in metadata file " +
+                  " not found on disk at: " + target_dir)
             return False
     return True
 
@@ -175,11 +175,13 @@ def load_metadata_csv(input_filepath):
     return metadata
 
 
-def printError(e):
+def print_error(e):
     """
-    Helper function to print error
+    Helper function to print error.
+
+    :param e: This field is the error to be printed.
     """
-    return " ".join([str(arg) for arg in e.args])
+    print(" ".join([str(arg) for arg in e.args]))
 
 
 def validate_date(date, project_member_id, filename):
@@ -194,11 +196,9 @@ def validate_date(date, project_member_id, filename):
     """
     try:
         arrow.get(date)
-    except arrow.parser.ParserError:
-        raise ValueError(
-            'Error: for project member id: ', project_member_id,
-            ' and filename: ', filename,
-            ' Dates must be in ISO 8601 format')
+    except Exception:
+        return False
+    return True
 
 
 def is_single_file_metadata_valid(file_metadata, project_member_id, filename):
@@ -245,10 +245,13 @@ def is_single_file_metadata_valid(file_metadata, project_member_id, filename):
     if 'creation_date' in file_metadata:
         if not validate_date(file_metadata['creation_date'], project_member_id,
                              filename):
-            return False
+            raise ValueError(
+                'Error: for project member id: ', project_member_id,
+                ' and filename: ', filename,
+                ' Dates must be in ISO 8601 format')
 
     if 'md5' in file_metadata:
-        if not re.match(r'[a-z0-9]{32}', file_metadata['md5'],
+        if not re.match(r'[a-f0-9]{32}$', file_metadata['md5'],
                         flags=re.IGNORECASE):
             raise ValueError(
                 'Error: for project member id: ', project_member_id,
@@ -282,8 +285,34 @@ def review_metadata_csv_single_user(filedir, metadata, csv_in, n_headers):
         for filename, file_metadata in metadata.items():
             is_single_file_metadata_valid(file_metadata, None, filename)
     except ValueError as e:
-        printError(e)
+        print_error(e)
         return False
+    return True
+
+
+def validate_subfolders(filedir, metadata):
+    """
+    Check that all folders in the given directory have a corresponding
+    entry in the metadata file, and vice versa.
+
+    :param filedir: This field is the target directory from which to
+        match metadata
+    :param metadata: This field contains the metadata to be matched.
+    """
+    if not os.path.isdir(filedir):
+        print("Error: " + filedir + " is not a directory")
+        return False
+    subfolders = os.listdir(filedir)
+    for subfolder in subfolders:
+        if subfolder not in metadata:
+            print("Error: folder " + subfolder +
+                  " present on disk but not in metadata")
+            return False
+    for subfolder in metadata:
+        if subfolder not in subfolders:
+            print("Error: folder " + subfolder +
+                  " present in metadata but not on disk")
+            return False
     return True
 
 
@@ -300,6 +329,8 @@ def review_metadata_csv_multi_user(filedir, metadata, csv_in, n_headers):
     :param n_headers: This field is the number of headers in the csv.
     """
     try:
+        if not validate_subfolders(filedir, metadata):
+            return False
         for row in csv_in:
             if len(row) != n_headers:
                 raise ValueError('Error: for project member id: ', row[0],
@@ -317,7 +348,7 @@ def review_metadata_csv_multi_user(filedir, metadata, csv_in, n_headers):
                                               filename)
 
     except ValueError as e:
-        printError(e)
+        print_error(e)
         return False
     return True
 

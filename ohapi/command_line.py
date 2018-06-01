@@ -244,7 +244,8 @@ def upload_metadata(directory, create_csv='', review='',
         raise ValueError("Either create_csv must be true or review must be " +
                          "true but not both")
     if review:
-        review_metadata_csv(directory, review, max_bytes=max_bytes)
+        if review_metadata_csv(directory, review):
+            print("The metadata file has been reviewed and is valid.")
     elif create_csv:
         mk_metadata_csv(directory, create_csv, max_bytes=max_bytes)
     else:
