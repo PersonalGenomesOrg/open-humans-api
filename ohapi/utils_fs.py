@@ -116,7 +116,7 @@ def load_metadata_csv_single_user(csv_in, header, tags_idx):
             break
         if len(row) != n_headers:
             raise ValueError('Error: In row number ' + str(index) + ':' +
-                             ' Number of columns in row (' + str(len(row)) +
+                             ' Number of columns (' + str(len(row)) +
                              ') doesnt match Number of headings (' +
                              str(n_headers) + ')')
         metadata[row[0]] = {
@@ -153,7 +153,7 @@ def load_metadata_csv_multi_user(csv_in, header, tags_idx):
             continue
         if len(row) != n_headers:
             raise ValueError('Error: In row number ' + str(index) + ':' +
-                             ' Number of columns in row (' + str(len(row)) +
+                             ' Number of columns (' + str(len(row)) +
                              ') doesnt match Number of headings (' +
                              str(n_headers) + ')')
 
@@ -179,9 +179,9 @@ def load_metadata_csv(input_filepath):
     with open(input_filepath) as f:
         csv_in = csv.reader(f)
         header = next(csv_in)
-        try:
+        if tags in header:
             tags_idx = header.index('tags')
-        except ValueError:
+        else:
             raise ValueError('"tags" is a compulsory column in metadata file.')
         if header[0] == 'project_member_id':
             if header[1] == 'filename':
@@ -195,7 +195,7 @@ def load_metadata_csv(input_filepath):
         else:
             raise ValueError('Incorrect Formatting of metadata. The first' +
                              ' column for single user upload should be' +
-                             ' "filename". For multiuser uploads the first' +
+                             ' "filename". For multiuser uploads the first ' +
                              'column should be "project_member_id" and the' +
                              ' second column should be "filename"')
     return metadata
