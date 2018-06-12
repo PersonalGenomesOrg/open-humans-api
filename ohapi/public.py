@@ -170,7 +170,7 @@ def download(source=None, username=None, directory='.', max_size='128m',
                 logging.info(value)
 
 
-def get_data_members_by_source(base_url=BASE_URL_API):
+def get_members_by_source(base_url=BASE_URL_API):
     """
     Function returns which members have joined each activity.
 
@@ -181,7 +181,7 @@ def get_data_members_by_source(base_url=BASE_URL_API):
     return response
 
 
-def get_data_sources_by_member(base_url=BASE_URL_API, limit=LIMIT_DEFAULT):
+def get_sources_by_member(base_url=BASE_URL_API, limit=LIMIT_DEFAULT):
     """
     Function returns which activities each member has joined.
 
