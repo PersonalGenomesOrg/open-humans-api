@@ -10,17 +10,20 @@ from click import UsageError
 from humanfriendly import parse_size
 
 from .api import (OH_BASE_URL, exchange_oauth2_member, message,
-                  delete_file, oauth2_auth_url)
+                  delete_file, oauth2_auth_url,
+                  oauth2_token_exchange)
 
 from .projects import OHProject
-
+from .public import download as public_download
 from .utils_fs import load_metadata_csv, mk_metadata_csv, read_id_list
+from .utils_fs import review_metadata_csv
 
 MAX_FILE_DEFAULT = parse_size('128m')
 
+
 def set_log_level(debug, verbose):
     """
-    Sets the logging level.
+    Function for setting the logging level.
 
     :param debug: This boolean field is the logging level.
     :param verbose: This boolean field is the logging level.
@@ -199,23 +202,24 @@ def download_metadata(master_token, output_csv, verbose=False, debug=False):
 
 @click.command()
 @click.option('-d', '--directory', help='Target directory', required=True)
-@click.option('--create-csv', help='Create draft CSV metadata', required=True)
+@click.option('--create-csv', help='Create draft CSV metadata', required=False)
+@click.option('--review', help='Review existing metadata file', required=False)
 @click.option('--max-size', help='Maximum file size to consider.',
               default='128m', show_default=True)
 @click.option('-v', '--verbose', help='Show INFO level logging', is_flag=True)
 @click.option('--debug', help='Show DEBUG level logging.', is_flag=True)
-def upload_metadata_cli(directory, create_csv='', create_json='', review='',
+def upload_metadata_cli(directory, create_csv='', review='',
                         max_size='128m', verbose=False, debug=False):
     """
     Command line function for drafting or reviewing metadata files.
     For more information visit
     :func:`upload_metadata<ohapi.command_line.upload_metadata>`.
     """
-    return upload_metadata(directory, create_csv, create_json, review,
+    return upload_metadata(directory, create_csv, review,
                            max_size, verbose, debug)
 
 
-def upload_metadata(directory, create_csv='', create_json='', review='',
+def upload_metadata(directory, create_csv='', review='',
                     max_size='128m', verbose=False, debug=False):
     """
     Draft or review metadata files for uploading files to Open Humans.
@@ -236,9 +240,17 @@ def upload_metadata(directory, create_csv='', create_json='', review='',
     set_log_level(debug, verbose)
 
     max_bytes = parse_size(max_size)
-
-    if create_csv:
+    if create_csv and review:
+        raise ValueError("Either create_csv must be true or review must be " +
+                         "true but not both")
+    if review:
+        if review_metadata_csv(directory, review):
+            print("The metadata file has been reviewed and is valid.")
+    elif create_csv:
         mk_metadata_csv(directory, create_csv, max_bytes=max_bytes)
+    else:
+        raise ValueError("Either create_csv must be true or review must be " +
+                         "true but not both should be false")
 
 
 @click.command()
@@ -392,6 +404,30 @@ def upload(directory, metadata_csv, master_token=None, member=None,
 
 
 @click.command()
+@click.option('-cid', '--client_id',
+              help='client id of user.', required=True)
+@click.option('-cs', '--client_secret',
+              help='client secret of user.', required=True)
+@click.option('-re_uri', '--redirect_uri',
+              help='redirect_uri of user', required=True)
+@click.option('--base_url', help='base url of Open Humans',
+              default=OH_BASE_URL, show_default=True)
+@click.option('--code', help='code of user',
+              default=None, show_default=True)
+@click.option('-rt', '--refresh_token', help='refresh token of user',
+              default=None, show_default=True)
+def oauth_token_exchange_cli(client_id, client_secret, redirect_uri,
+                             base_url=OH_BASE_URL, code=None,
+                             refresh_token=None):
+    """
+    Command line function for obtaining the refresh token/code.
+    For more information visit
+    :func:`oauth2_token_exchange<ohapi.api.oauth2_token_exchange>`.
+    """
+    print(oauth2_token_exchange(client_id, client_secret, redirect_uri,
+                                base_url, code, refresh_token))
+
+@click.command()
 @click.option('-r', '--redirect_uri',
               help='Redirect URL for project')
 @click.option('-c', '--client_id',
@@ -403,7 +439,7 @@ def oauth2_auth_url_cli(redirect_uri=None, client_id=None,
     Command line function for obtaining the Oauth2 url.
     For more information visit
     :func:`oauth2_auth_url<ohapi.api.oauth2_auth_url>`.
-"""
+    """
     result = oauth2_auth_url(redirect_uri, client_id, base_url)
     print('The requested URL is : \r')
     print(result)
@@ -457,3 +493,22 @@ def delete_cli(access_token, project_member_id, base_url=OH_BASE_URL,
         print("File deleted successfully")
     else:
         print("Bad response while deleting file.")
+
+
+@click.command()
+@click.option('-s', '--source', help='the source to download files from')
+@click.option('-u', '--username', help='the user to download files from')
+@click.option('-d', '--directory', help='the directory for downloaded files',
+              default='.')
+@click.option('-m', '--max-size', help='the maximum file size to download',
+              default='128m')
+@click.option('-q', '--quiet', help='Report ERROR level logging to stdout',
+              is_flag=True)
+@click.option('--debug', help='Report DEBUG level logging to stdout.',
+              is_flag=True)
+def public_data_download_cli(source, username, directory, max_size, quiet,
+                             debug):
+    """
+    Command line tools for :func:`download<ohapi.public.download>`
+    """
+    return public_download(source, username, directory, max_size, quiet, debug)
