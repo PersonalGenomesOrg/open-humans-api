@@ -4,7 +4,7 @@ import os
 import arrow
 from humanfriendly import parse_size
 
-from .api import delete_file, get_all_results, upload_file, upload_aws
+from .api import delete_file, get_all_results, upload_aws
 from .utils_fs import download_file, validate_metadata
 
 MAX_SIZE_DEFAULT = '128m'
