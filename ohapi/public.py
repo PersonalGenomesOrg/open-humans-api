@@ -23,7 +23,7 @@ from .api import get_page
 
 BASE_URL = 'https://www.openhumans.org'
 BASE_URL_API = '{}/api/public-data/'.format(BASE_URL)
-
+LIMIT_DEFAULT = 100
 
 def signal_handler_cb(signal_name, frame):
     """
@@ -53,7 +53,7 @@ def download_url(result, directory, max_bytes):
 
     if size > max_bytes:
         logging.info('Skipping {}, {} > {}'.format(filename, format_size(size),
-                                            format_size(max_bytes)))
+                                                   format_size(max_bytes)))
 
         return
 
@@ -95,24 +95,6 @@ def download_url(result, directory, max_bytes):
         print("\n")
 
     logging.info('Downloaded {}'.format(filename))
-
-
-@click.command()
-@click.option('-s', '--source', help='the source to download files from')
-@click.option('-u', '--username', help='the user to download files from')
-@click.option('-d', '--directory', help='the directory for downloaded files',
-              default='.')
-@click.option('-m', '--max-size', help='the maximum file size to download',
-              default='128m')
-@click.option('-q', '--quiet', help='Report ERROR level logging to stdout',
-              is_flag=True)
-@click.option('--debug', help='Report DEBUG level logging to stdout.',
-              is_flag=True)
-def download_cli(source, username, directory, max_size, quiet, debug):
-    """
-    Command line tools for :func:`download<ohapi.public.download>`
-    """
-    return download(source, username, directory, max_size, quiet, debug)
 
 
 def download(source=None, username=None, directory='.', max_size='128m',
@@ -186,3 +168,34 @@ def download(source=None, username=None, directory='.', max_size='128m',
         for value in executor.map(download_url_partial, results):
             if value:
                 logging.info(value)
+
+
+def get_members_by_source(base_url=BASE_URL_API):
+    """
+    Function returns which members have joined each activity.
+
+    :param base_url: It is URL: `https://www.openhumans.org/api/public-data`.
+    """
+    url = '{}members-by-source/'.format(base_url)
+    response = get_page(url)
+    return response
+
+
+def get_sources_by_member(base_url=BASE_URL_API, limit=LIMIT_DEFAULT):
+    """
+    Function returns which activities each member has joined.
+
+    :param base_url: It is URL: `https://www.openhumans.org/api/public-data`.
+    :param limit: It is the limit of data send by one request.
+    """
+    url = '{}sources-by-member/'.format(base_url)
+    page = '{}?{}'.format(url, urlencode({'limit': limit}))
+    results = []
+    while True:
+        data = get_page(page)
+        results = results + data['results']
+        if data['next']:
+            page = data['next']
+        else:
+            break
+    return results

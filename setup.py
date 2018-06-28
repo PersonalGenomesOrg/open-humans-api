@@ -54,11 +54,12 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'ohpub-download = ohapi.public:download_cli',
+            'ohpub-download = ohapi.command_line:public_data_download_cli',
             'ohproj-download = ohapi.command_line:download_cli',
             'ohproj-download-metadata = ohapi.command_line:download_metadata_cli',
             'ohproj-upload = ohapi.command_line:upload_cli',
             'ohproj-upload-metadata = ohapi.command_line:upload_metadata_cli',
+            'ohproj-oauth2-token-exchange = ohapi.command_line:oauth_token_exchange_cli',
             'ohproj-oauth2-url = ohapi.command_line:oauth2_auth_url_cli',
             'ohproj-message = ohapi.command_line:message_cli',
             'ohproj-delete = ohapi.command_line:delete_cli',
