@@ -171,7 +171,7 @@ def delete_file(access_token, project_member_id=None, base_url=OH_BASE_URL,
         base_url, '/api/direct-sharing/project/files/delete/?{}'.format(
             urlparse.urlencode({'access_token': access_token})))
     if not(project_member_id):
-        response = exchange_oauth2_member(access_token)
+        response = exchange_oauth2_member(access_token, base_url=base_url)
         project_member_id = response['project_member_id']
     data = {'project_member_id': project_member_id}
     if file_basename and not (file_id or all_files):
@@ -316,7 +316,7 @@ def upload_stream(stream, filename, metadata, access_token,
             urlparse.urlencode({'access_token': access_token})))
 
     if not(project_member_id):
-        response = exchange_oauth2_member(access_token)
+        response = exchange_oauth2_member(access_token, base_url=base_url)
         project_member_id = response['project_member_id']
 
     data = {'project_member_id': project_member_id,
