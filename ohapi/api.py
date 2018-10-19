@@ -324,17 +324,18 @@ def upload_stream(stream, filename, metadata, access_token,
             'filename': filename}
     r1 = requests.post(url, data=data)
     handle_error(r1, 201)
-    requests.put(url=r1.json()['url'], data=stream)
+    r2 = requests.put(url=r1.json()['url'], data=stream)
+    handle_error(r2, 200)
     done = urlparse.urljoin(
         base_url,
         '/api/direct-sharing/project/files/upload/complete/?{}'.format(
             urlparse.urlencode({'access_token': access_token})))
 
-    r2 = requests.post(done, data={'project_member_id': project_member_id,
+    r3 = requests.post(done, data={'project_member_id': project_member_id,
                                    'file_id': r1.json()['id']})
-    handle_error(r2, 200)
+    handle_error(r3, 200)
     logging.info('Upload complete: {}'.format(file_identifier))
-    return r2
+    return r3
 
 
 def upload_file(target_filepath, metadata, access_token, base_url=OH_BASE_URL,
