@@ -253,10 +253,13 @@ def handle_error(r, expected_code):
     code = r.status_code
     if code != expected_code:
         info = 'API response status code {}'.format(code)
-        if 'detail' in r.json():
-            info = info + ": {}".format(r.json()['detail'])
-        elif 'metadata' in r.json():
-            info = info + ": {}".format(r.json()['metadata'])
+        try:
+            if 'detail' in r.json():
+                info = info + ": {}".format(r.json()['detail'])
+            elif 'metadata' in r.json():
+                info = info + ": {}".format(r.json()['metadata'])
+        except json.decoder.JSONDecodeError:
+            info = info + ":\n{}".format(r.content)
         raise Exception(info)
 
 
